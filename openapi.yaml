@@ -5,10 +5,10 @@ info:
   contact:
     email: developer@perfectflightapp.com
 servers:
-- url: "https://api.sandbox.perfectflight.com.br/v1"
-  description: "Sandbox"
-- url: "https://api.perfectflight.com.br/v1"
-  description: "Production"
+  - url: https://api.sandbox.perfectflight.com.br/v1
+    description: Sandbox
+  - url: https://api.perfectflight.com.br/v1
+    description: Production
 tags:
   - name: application
   - name: farm
@@ -22,141 +22,145 @@ paths:
         - application
       responses:
         default:
-          description: "Default response for GET /applications"
+          description: Default response for GET /applications
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
   /applications/{applicationId}:
     get:
       tags:
         - application
       responses:
         default:
-          description: "Default response for GET /applications/{applicationId}"
+          description: Default response for GET /applications/{applicationId}
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "applicationId"
-      in: "path"
-      description: "Generated path parameter for applicationId"
-      required: true
-      schema:
-        type: "string"
+      - name: applicationId
+        in: path
+        description: Generated path parameter for applicationId
+        example: c17ebf24-e2bd-4c83-88fc-f2c8b0e43883
+        required: true
+        schema:
+          type: string
+          format: uuid
   /farms:
     get:
       tags:
         - farm
       responses:
         default:
-          description: "Default response for GET /farms"
+          description: Default response for GET /farms
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
   /farms/{farmId}:
     get:
       tags:
         - farm
       responses:
         default:
-          description: "Default response for GET /farms/{farmId}"
+          description: Default response for GET /farms/{farmId}
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "farmId"
-      in: "path"
-      description: "Generated path parameter for farmId"
-      required: true
-      schema:
-        type: "string"
+      - name: farmId
+        in: path
+        description: Generated path parameter for farmId
+        example: c17ebf24-e2bd-4c83-88fc-f2c8b0e43883
+        required: true
+        schema:
+          type: string
+          format: uuid
   /farms/{farmId}/fields:
     get:
       tags:
         - field
       responses:
         default:
-          description: "Default response for GET /farms/{farmId}/fields"
+          description: Default response for GET /farms/{farmId}/fields
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "farmId"
-      in: "path"
-      description: "Generated path parameter for farmId"
-      required: true
-      schema:
-        type: "string"
+      - name: farmId
+        in: path
+        description: Generated path parameter for farmId
+        required: true
+        schema:
+          type: string
   /farms/{farmId}/fields/{fieldId}:
     get:
       tags:
         - field
       responses:
         default:
-          description: "Default response for GET /farms/{farmId}/fields/{fieldId}"
+          description: Default response for GET /farms/{farmId}/fields/{fieldId}
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "farmId"
-      in: "path"
-      description: "Generated path parameter for farmId"
-      required: true
-      schema:
-        type: "string"
-    - name: "fieldId"
-      in: "path"
-      description: "Generated path parameter for fieldId"
-      required: true
-      schema:
-        type: "string"
+      - name: farmId
+        in: path
+        description: Generated path parameter for farmId
+        required: true
+        schema:
+          type: string
+      - name: fieldId
+        in: path
+        description: Generated path parameter for fieldId
+        required: true
+        schema:
+          type: string
   /restriction-fields:
     get:
       tags:
         - restriction field
       responses:
         default:
-          description: "Default response for GET /restriction-fields"
+          description: Default response for GET /restriction-fields
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
   /restriction-fields/{restrictionFieldId}:
     get:
       tags:
         - restriction field
       responses:
         default:
-          description: "Default response for GET /restriction-fields/{restrictionFieldId}"
+          description: Default response for GET /restriction-fields/{restrictionFieldId}
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "restrictionFieldId"
-      in: "path"
-      description: "Generated path parameter for restrictionFieldId"
-      required: true
-      schema:
-        type: "string"
+      - name: restrictionFieldId
+        in: path
+        description: Generated path parameter for restrictionFieldId
+        required: true
+        schema:
+          type: string
   /seasons:
     get:
       tags:
         - season
       responses:
         default:
-          description: "Default response for GET /seasons"
+          description: Default response for GET /seasons
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
   /seasons/{seasonId}:
     get:
       tags:
         - season
       responses:
         default:
-          description: "Default response for GET /seasons/{seasonId}"
+          description: Default response for GET /seasons/{seasonId}
       security:
-      - openapi-authorizer: []
+        - bearerAuth: []
     parameters:
-    - name: "seasonId"
-      in: "path"
-      description: "Generated path parameter for seasonId"
-      required: true
-      schema:
-        type: "string"
+      - name: seasonId
+        in: path
+        description: Generated path parameter for seasonId
+        required: true
+        schema:
+          type: string
 components:
   securitySchemes:
-    openapi-authorizer:
-      type: "apiKey"
-      name: "Unused"
-      in: "header"
+    bearerAuth:
+      scheme: bearer
+      type: http
+      bearerFormat: JWT
