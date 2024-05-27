@@ -53,8 +53,14 @@ paths:
       tags:
         - farm
       responses:
-        default:
-          description: Default response for GET /farms
+        '200':
+          description: success operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Farm'
       security:
         - bearerAuth: []
   /farms/{farmId}:
@@ -62,8 +68,12 @@ paths:
       tags:
         - farm
       responses:
-        default:
-          description: Default response for GET /farms/{farmId}
+        '200':
+          description: success operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Farm'
       security:
         - bearerAuth: []
     parameters:
@@ -164,6 +174,53 @@ paths:
         schema:
           type: string
 components:
+  schemas:
+    Farm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          example: 20f94ebe-361b-44e6-9729-57d744d04b27
+        name:
+          type: string
+          nullable: false
+          example: My Farm
+        namespace:
+          type: string
+          nullable: false
+          example: Farms
+        area:
+          type: number
+          nullable: false
+          default: 0
+          example: 155.43
+        count:
+          type: integer
+          nullable: false
+          default: 0
+          example: 29
+        boundaries:
+          type: string
+          nullable: false
+          default: "POLYGON EMPTY"
+          format: wkt format
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2024-05-27T22:59:44.903Z
   securitySchemes:
     bearerAuth:
       description: "Authorization Server"
