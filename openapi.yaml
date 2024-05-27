@@ -5,10 +5,14 @@ info:
   contact:
     email: developer@perfectflightapp.com
 servers:
-  - url: https://api.sandbox.perfectflight.com.br/v1
-    description: Sandbox
-  - url: https://api.perfectflight.com.br/v1
-    description: Production
+  - url: https://{environment}.perfectflight.com.br/v1
+    description: "API Server"
+    variables:
+      environment: 
+        default: "api.sandbox"
+        enum:
+          - "api.sandbox"
+          - "api"
 tags:
   - name: application
   - name: farm
@@ -29,6 +33,7 @@ paths:
     get:
       tags:
         - application
+      
       responses:
         default:
           description: Default response for GET /applications/{applicationId}
@@ -161,6 +166,13 @@ paths:
 components:
   securitySchemes:
     bearerAuth:
-      scheme: bearer
-      type: http
-      bearerFormat: JWT
+      description: "Authorization Server"
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.sandbox.perfectflight.com.br/connect/token'
+          scopes:
+            read_customer_farm: read farm
+            read_customer_field: read field
+            read_customer_season: read customer season
+        
