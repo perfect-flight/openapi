@@ -5,14 +5,8 @@ info:
   contact:
     email: developer@perfectflightapp.com
 servers:
-  - url: https://{environment}.perfectflight.com.br/v1
+  - url: https://api.sandbox.perfectflight.com.br/v1
     description: "API Server"
-    variables:
-      environment: 
-        default: "api.sandbox"
-        enum:
-          - "api.sandbox"
-          - "api"
 tags:
   - name: application
   - name: farm
@@ -175,8 +169,24 @@ paths:
           type: string
 components:
   schemas:
+    Application:
+      type: object
+    Season:
+      type: object
+    Restriction Field:
+      type: object
+    Field:
+      type: object
     Farm:
       type: object
+      required:
+        - id
+        - name
+        - namespace
+        - area
+        - count
+        - boundaries
+        - createdAt
       properties:
         id:
           type: string
@@ -205,6 +215,7 @@ components:
           type: string
           nullable: false
           default: "POLYGON EMPTY"
+          example: "MULTIPOLYGON (((-63.7279364 -8.8349494,-63.7264692 -8.8379071,-63.7252954 -8.8373272,-63.7272909 -8.8346015,-63.7279364 -8.8349494)),((-63.7265866 -8.8333836,-63.7268213 -8.8324557,-63.7245324 -8.8322238,-63.7246498 -8.8331516,-63.7265866 -8.8333836)))"
           format: wkt format
         createdAt:
           type: string
