@@ -642,7 +642,11 @@ components:
         area:
           type: number
           nullable: false
-          description: total field area in hectares
+          description: |-
+            total field area in hectares.
+
+            the area calculation is performed considering the EPSG:5530 projection, which is a specific coordinate reference system for the geographic region of Brazil.
+            for more details visit [https://epsg.io/5530](https://epsg.io/5530).
           example: 33.43
         boundaries:
           type: string
@@ -699,7 +703,11 @@ components:
           type: number
           nullable: false
           default: 0
-          description: total area of ​​the farm in hectares according to the fields that are active and associated with it
+          description: |-
+            total area of ​​the farm in hectares according to the fields that are active and associated with it.
+
+            the area calculation is performed considering the EPSG:5530 projection, which is a specific coordinate reference system for the geographic region of Brazil.
+            for more details visit [https://epsg.io/5530](https://epsg.io/5530).
           example: 155.43
         count:
           type: integer
