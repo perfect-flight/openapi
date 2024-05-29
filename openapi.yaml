@@ -16,6 +16,8 @@ tags:
 paths:
   /applications:
     get:
+      description: search all applications
+      summary: search all applications
       tags:
         - application
       responses:
@@ -25,6 +27,8 @@ paths:
         - bearerAuth: []
   /applications/{applicationId}:
     get:
+      description: search application by id
+      summary: search application by id
       tags:
         - application
       
@@ -36,7 +40,7 @@ paths:
     parameters:
       - name: applicationId
         in: path
-        description: Generated path parameter for applicationId
+        description: unique application identification
         example: c17ebf24-e2bd-4c83-88fc-f2c8b0e43883
         required: true
         schema:
@@ -136,8 +140,8 @@ paths:
         schema:
           type: integer
           nullable: true
-          example: 1
-          default: 0
+          example: 2
+          default: 1
       - name: pageSize
         in: query
         description: number of farms per page
@@ -149,6 +153,8 @@ paths:
           default: 10
   /farms/{farmId}:
     get:
+      description: search farm by id
+      summary: search farm by id
       tags:
         - farm
       responses:
@@ -217,7 +223,7 @@ paths:
     parameters:
       - name: farmId
         in: path
-        description: Generated path parameter for farmId
+        description: unique farm identification
         example: c17ebf24-e2bd-4c83-88fc-f2c8b0e43883
         required: true
         schema:
@@ -234,6 +240,8 @@ paths:
           nullable: true
   /farms/{farmId}/fields:
     get:
+      description: search all fields by farm id
+      summary: search all fields by farm id
       tags:
         - field
       responses:
@@ -244,7 +252,7 @@ paths:
     parameters:
       - name: farmId
         in: path
-        description: Generated path parameter for farmId
+        description: unique farm identification
         required: true
         schema:
           type: string
@@ -260,18 +268,20 @@ paths:
     parameters:
       - name: farmId
         in: path
-        description: Generated path parameter for farmId
+        description: unique farm identification
         required: true
         schema:
           type: string
       - name: fieldId
         in: path
-        description: Generated path parameter for fieldId
+        description: unique field identification
         required: true
         schema:
           type: string
   /restriction-fields:
     get:
+      description: search all restriction fields
+      summary: search all restriction fields
       tags:
         - restriction field
       responses:
@@ -281,6 +291,8 @@ paths:
         - bearerAuth: []
   /restriction-fields/{restrictionFieldId}:
     get:
+      description: search restriction field by id
+      summary: search restriction field by id
       tags:
         - restriction field
       responses:
@@ -291,12 +303,14 @@ paths:
     parameters:
       - name: restrictionFieldId
         in: path
-        description: Generated path parameter for restrictionFieldId
+        description: unique restriction field identification
         required: true
         schema:
           type: string
   /seasons:
     get:
+      description: search all seasons
+      summary: search all seasons
       tags:
         - season
       responses:
@@ -306,6 +320,8 @@ paths:
         - bearerAuth: []
   /seasons/{seasonId}:
     get:
+      description: search season by id
+      summary: search season by id
       tags:
         - season
       responses:
@@ -316,7 +332,7 @@ paths:
     parameters:
       - name: seasonId
         in: path
-        description: Generated path parameter for seasonId
+        description: unique season identification
         required: true
         schema:
           type: string
@@ -378,6 +394,54 @@ components:
       type: object
     FieldDto:
       type: object
+      required:
+        - id
+        - name
+        - boundaries
+        - area 
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique field identification
+          example: b48207a5-9408-4b92-b15f-6954b225c0b6
+        name:
+          type: string
+          nullable: false
+          description: field name
+          example: Field 01
+        area:
+          type: number
+          nullable: false
+          default: 0
+          description: --
+          example: 55.43
+        boundaries:
+          type: string
+          nullable: false
+          description: --
+          example: "--"
+          format: wkt
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the field was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the field was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the field was deleted
+          example: 2024-05-27T22:59:44.903Z
     FarmDto:
       type: object
       required:
@@ -399,7 +463,7 @@ components:
           type: string
           nullable: false
           description: farm name
-          example: My FarmDto
+          example: My Farm
         namespace:
           type: string
           nullable: false
@@ -428,7 +492,7 @@ components:
           type: string
           format: date-time
           nullable: false
-          description: timestamp in RFC 3339 (UTC) format in which the farm was created
+          description: timestamp in RFC 3339 format (UTC) in which the farm was created
           example: 2024-05-27T22:52:44.903Z
         updatedAt:
           type: string
