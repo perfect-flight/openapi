@@ -839,7 +839,10 @@ components:
         parentFarmId:
           type: string
           format: uuid
-          description: parent farm identification
+          description: |- 
+            identification of the parent farm.
+
+            enter this attribute when you want to associate a farm with an existing one (as if it were a tree structure).
           example: bfc780ae-3873-4caf-92d3-9b7ae4ea2a57
     FarmCreatedDto:
       type: object
