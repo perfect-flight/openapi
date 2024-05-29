@@ -108,7 +108,6 @@ paths:
           schema:
             type: string
             format: uuid
-            nullable: true
     parameters:
       - name: namespace
         in: query
@@ -239,7 +238,6 @@ paths:
         schema:
           type: string
           format: uuid
-          nullable: true
   /farms/{farmId}/fields:
     get:
       description: search all fields by farm id
@@ -326,7 +324,6 @@ paths:
         schema:
           type: string
           format: uuid
-          nullable: true
   /fields/{fieldId}:
     get:
       description: search field by id
@@ -413,7 +410,6 @@ paths:
         schema:
           type: string
           format: uuid
-          nullable: true
   /restriction-fields:
     get:
       description: search all restriction fields
@@ -472,6 +468,7 @@ paths:
         required: true
         schema:
           type: string
+
 components:
   schemas:
     FarmNotFoundException:
@@ -523,7 +520,7 @@ components:
           type: string
           description: exception error message
           nullable: false
-          example: unauthorized
+          example: Unauthorized
     InternalServerErrorException:
       type: object
       required:
@@ -539,7 +536,7 @@ components:
           type: string
           description: exception error message
           nullable: false
-          example: internal server error
+          example: Internal Server Error
     ApplicationDto:
       type: object
     SeasonDto:
