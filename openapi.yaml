@@ -3,6 +3,8 @@ info:
   title: Perfect Flight - OpenAPI
   version: 1.0.0
   contact:
+    url: https://www.perfectflight.com.br/en/contact
+    name: Perfect Flight
     email: developer@perfectflightapp.com
 servers:
   - url: https://api.sandbox.perfectflight.com.br/v1
@@ -256,6 +258,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
   /fields:
     get:
       description: search all fields
@@ -315,6 +318,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
   /restriction-fields:
     get:
       description: search all restriction fields
