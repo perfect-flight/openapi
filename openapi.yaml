@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Perfect Flight - OpenAPI
+  title: Perfect Flight - API Reference
   version: 1.0.0
   contact:
     url: https://www.perfectflight.com.br/en/contact
@@ -60,7 +60,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -81,7 +81,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -102,7 +102,7 @@ paths:
       parameters:
         - name: x-pf-correlation-id
           in: header
-          description: correlation request identification
+          description: correlation identifier between request and response
           required: false
           example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
           schema:
@@ -165,7 +165,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -180,7 +180,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -195,7 +195,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -210,7 +210,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -233,7 +233,7 @@ paths:
           format: uuid
       - name: x-pf-correlation-id
         in: header
-        description: correlation request identification
+        description: correlation identifier between request and response
         required: false
         example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
         schema:
@@ -271,7 +271,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -287,6 +287,46 @@ paths:
                 uniqueItems: true
                 items:
                   $ref: '#/components/schemas/FieldDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '500':
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        description: correlation identifier between request and response
+        required: false
+        example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+        schema:
+          type: string
+          format: uuid
+          nullable: true
   /fields/{fieldId}:
     get:
       description: search field by id
@@ -299,7 +339,7 @@ paths:
           headers:
             x-pf-correlation-id:
               required: true
-              description: correlation request identification
+              description: correlation identifier between request and response
               schema:
                 type: string
                 format: uuid
@@ -309,16 +349,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '404':
+          description: field not found
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldNotFoundException'
+        '500':
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
       security:
         - bearerAuth: []
     parameters:
       - name: fieldId
         in: path
         description: unique field identification
+        example: ecafbb6f-c7b4-43d6-bf54-5f7dd98d8377
         required: true
         schema:
           type: string
           format: uuid
+      - name: x-pf-correlation-id
+        in: header
+        description: correlation identifier between request and response
+        required: false
+        example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+        schema:
+          type: string
+          format: uuid
+          nullable: true
   /restriction-fields:
     get:
       description: search all restriction fields
@@ -380,6 +475,7 @@ paths:
 components:
   schemas:
     FarmNotFoundException:
+      description: farm not found
       type: object
       required:
         - error
@@ -395,6 +491,23 @@ components:
           description: exception error message
           nullable: false
           example: Farm 20f94ebe-361b-44e6-9729-57d744d04b27 not found
+    FieldNotFoundException:
+      description: field not found
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: exception error code
+          nullable: false
+          example: not_found_exception
+        message:
+          type: string
+          description: exception error message
+          nullable: false
+          example: Field ecafbb6f-c7b4-43d6-bf54-5f7dd98d8377 not found
     UnauthorizedException:
       type: object
       required:
@@ -456,14 +569,13 @@ components:
         area:
           type: number
           nullable: false
-          default: 0
-          description: --
-          example: 55.43
+          description: total field area in hectares
+          example: 33.43
         boundaries:
           type: string
           nullable: false
-          description: --
-          example: "--"
+          description: object in wkt format that represents the georeferencing of the field
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
           format: wkt
         createdAt:
           type: string
