@@ -8,7 +8,9 @@ info:
     email: developer@perfectflightapp.com
 servers:
   - url: https://api.sandbox.perfectflight.com.br/v1
-    description: "API Server"
+    description: "Sandbox Server API"
+  - url: https://api.perfectflight.com.br/v1
+    description: "Production Server API"
 tags:
   - name: application
   - name: farm
@@ -26,7 +28,7 @@ paths:
         default:
           description: Default response for GET /applications
       security:
-        - bearerAuth: []
+        - auth: []
   /applications/{applicationId}:
     get:
       description: search application by id
@@ -38,7 +40,7 @@ paths:
         default:
           description: Default response for GET /applications/{applicationId}
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: applicationId
         in: path
@@ -98,7 +100,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorException'
       security:
-        - bearerAuth: []
+        - auth: []
       parameters:
         - name: x-pf-correlation-id
           in: header
@@ -220,7 +222,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorException'
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: farmId
         in: path
@@ -248,7 +250,7 @@ paths:
         default:
           description: Default response for GET /farms/{farmId}/fields
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: farmId
         in: path
@@ -392,7 +394,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorException'
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: fieldId
         in: path
@@ -420,7 +422,7 @@ paths:
         default:
           description: Default response for GET /restriction-fields
       security:
-        - bearerAuth: []
+        - auth: []
   /restriction-fields/{restrictionFieldId}:
     get:
       description: search restriction field by id
@@ -431,7 +433,7 @@ paths:
         default:
           description: Default response for GET /restriction-fields/{restrictionFieldId}
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: restrictionFieldId
         in: path
@@ -449,7 +451,7 @@ paths:
         default:
           description: Default response for GET /seasons
       security:
-        - bearerAuth: []
+        - auth: []
   /seasons/{seasonId}:
     get:
       description: search season by id
@@ -460,7 +462,7 @@ paths:
         default:
           description: Default response for GET /seasons/{seasonId}
       security:
-        - bearerAuth: []
+        - auth: []
     parameters:
       - name: seasonId
         in: path
@@ -468,7 +470,6 @@ paths:
         required: true
         schema:
           type: string
-
 components:
   schemas:
     FarmNotFoundException:
@@ -657,14 +658,10 @@ components:
           description: timestamp in RFC 3339 format (UTC) in which the farm was deleted
           example: 2024-05-27T22:59:44.903Z
   securitySchemes:
-    bearerAuth:
+    auth:
       description: "Authorization Server"
-      type: oauth2
+      type: oauth2     
       flows:
         clientCredentials:
           tokenUrl: 'https://auth.sandbox.perfectflight.com.br/connect/token'
-          scopes:
-            read_customer_farm: read farm
-            read_customer_field: read field
-            read_customer_season: read customer season
         
