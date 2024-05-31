@@ -865,6 +865,13 @@ components:
         - duplicated_application
         - wrong_application_data
         - wrong_service_order_application
+    ApplicationScheduleStatusEnum:
+      type: string
+      description: application schedule status
+      example: executed
+      enum:
+        - planned
+        - executed
     SeasonDto:
       type: object
       required:
@@ -912,6 +919,55 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was deleted
           example: 2024-05-27T22:59:44.903Z
+    PilotDto:
+      type: object
+    AircraftDto:
+      type: object
+    ApplicationFieldDto:
+      type: object
+    ApplicationProductDto:
+      type: object
+    ApplicationScheduleDto:
+      type: object
+      required:
+        - id
+        - status
+        - pilot
+        - aircraft
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application schedule identification
+          example: ce75ce52-5064-485a-87a5-aa0f1ebe0c03
+        status:
+          $ref: '#/components/schemas/ApplicationScheduleStatusEnum'
+        pilot:
+          $ref: '#/components/schemas/PilotDto'
+        aircraft:
+          $ref: '#/components/schemas/AircraftDto'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application schedule was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application schedule was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application schedule was deleted
+          example: 2024-05-27T22:59:44.903Z    
+    ApplicationLogDto:
+      type: object
     ApplicationDto:
       type: object
       required:
@@ -919,6 +975,7 @@ components:
         - season
         - status
         - analysisMethod
+        - schedules
         - applicationType
         - averageSuccessScore
         - averageFailureScore
@@ -959,6 +1016,38 @@ components:
           $ref: '#/components/schemas/ApplicationTypeEnum'
         deletedReason:
           $ref: '#/components/schemas/ApplicationDeletedReasonEnum'
+        fields:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: fields of application
+          items:
+            $ref: '#/components/schemas/ApplicationFieldDto'
+        schedules:
+          type: array
+          minItems: 1
+          nullable: false
+          uniqueItems: true
+          description: schedules of application
+          items:
+            $ref: '#/components/schemas/ApplicationScheduleDto'
+        logs:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: logs of application
+          items:
+            $ref: '#/components/schemas/ApplicationLogDto'
+        products:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: products of application
+          items:
+            $ref: '#/components/schemas/ApplicationProductDto'
         averageSuccessScore:
           type: number
           format: double
