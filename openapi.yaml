@@ -805,8 +805,7 @@ components:
           example: Internal Server Error
     CropEnum:
       type: string
-      nullable: false
-      description: crop types
+      description: crop type
       example: cotton
       enum:
         - unknown
@@ -835,6 +834,37 @@ components:
         - sunn_hemp
         - pearl_millet
         - sorghum
+    ApplicationTypeEnum:
+      type: string
+      description: application type
+      example: aerial
+      enum:
+        - aerial
+        - terrestrial
+    ApplicationAnalysisMethodEnum:
+      type: string
+      description: application analysis method
+      example: COMPLETE_TARGET
+      enum:
+        - BORDER_TARGET
+        - PARTIAL_TARGET
+        - COMPLETE_TARGET
+    ApplicationStatusEnum:
+      type: string
+      example: complete
+      description: application status
+      enum:
+        - active
+        - in_analysis
+        - complete
+    ApplicationDeletedReasonEnum:
+      type: string
+      description: application deleted reason
+      example: wrong_application_data
+      enum:
+        - duplicated_application
+        - wrong_application_data
+        - wrong_service_order_application
     SeasonDto:
       type: object
       required:
@@ -890,6 +920,27 @@ components:
         - status
         - analysisMethod
         - applicationType
+        - averageSuccessScore
+        - averageFailureScore
+        - averageUniformityScore
+        - averageWasteScore
+        - totalInternalAppliedOverlapArea
+        - totalExternalAppliedOverlapArea
+        - totalInternalAppliedArea
+        - totalExternalAppliedArea
+        - totalAppliedOverlapArea
+        - totalTargetFieldArea
+        - totalNotAppliedArea
+        - totalDistanceTraveled
+        - totalAppliedArea
+        - totalAppliedOverdoseArea
+        - totalCostByArea
+        - totalCostByAppliedArea
+        - totalCostByTargetFieldArea
+        - totalCostByExternalAppliedArea
+        - totalCostByInternalAppliedArea
+        - totalCostByInternalAppliedOverlapArea
+        - totalCostByExternalAppliedOverlapArea
         - createdAt
       properties:
         id:
@@ -899,37 +950,160 @@ components:
           description: unique application identification
           example: fa2a8bbd-5f1d-4012-a022-12a28f676057
         season:
-            $ref: '#/components/schemas/SeasonDto'
+          $ref: '#/components/schemas/SeasonDto'
         status:
-          type: string
-          nullable: false
-          example: complete
-          enum:
-            - active
-            - in_analysis
-            - complete
+          $ref: '#/components/schemas/ApplicationStatusEnum'
         analysisMethod:
-          type: string
-          nullable: false
-          example: COMPLETE_TARGET
-          enum:
-            - BORDER_TARGET
-            - PARTIAL_TARGET
-            - COMPLETE_TARGET
+          $ref: '#/components/schemas/ApplicationAnalysisMethodEnum'
         applicationType:
-          type: string
-          nullable: false
-          example: aerial
-          enum:
-            - aerial
-            - terrestrial
+          $ref: '#/components/schemas/ApplicationTypeEnum'
         deletedReason:
-          type: string
+          $ref: '#/components/schemas/ApplicationDeletedReasonEnum'
+        averageSuccessScore:
+          type: number
+          format: double
+          nullable: false
+          minimum: 0
+          maximum: 100
+          example: 98.45
+        averageFailureScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: false
+          example: 98.45
+        averageUniformityScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: false
+          example: 98.45
+        averageWasteScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: false
+          example: 98.45
+        averageRateFlow:
+          format: double
+          type: number
           nullable: true
-          enum:
-            - duplicated_application
-            - wrong_application_data
-            - wrong_service_order_application
+          example: 98.45
+        averageSpeed:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        averageHeight:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        totalInternalAppliedOverlapArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalExternalAppliedOverlapArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalInternalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalExternalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverlapArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalTargetFieldArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalNotAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalDistanceTraveled:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverdoseArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByTargetFieldArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByExternalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByInternalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByInternalAppliedOverlapArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByExternalAppliedOverlapArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
         createdAt:
           type: string
           format: date-time
