@@ -936,6 +936,9 @@ components:
         - aircraft
         - createdAt
       properties:
+        # runwayDistance
+        # finishedIn
+        # startedIn
         id:
           type: string
           format: uuid
@@ -948,6 +951,18 @@ components:
           $ref: '#/components/schemas/PilotDto'
         aircraft:
           $ref: '#/components/schemas/AircraftDto'
+        swathWidth:
+          type: integer
+          format: int32
+          nullable: true
+          description: swath width (in meters)
+          example: 28
+        comments:
+          type: string
+          nullable: true
+          maxLength: 255
+          description: application schedule comments
+          example: my application schedule comments
         createdAt:
           type: string
           format: date-time
