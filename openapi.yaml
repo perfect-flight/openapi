@@ -14,7 +14,7 @@ servers:
 tags:
   - name: farm
   - name: field
-  - name: restriction field
+  - name: application
 paths:
   /farms:
     parameters:
@@ -533,17 +533,7 @@ paths:
         schema:
           type: string
           format: uuid
-  /restriction-fields:
-    get:
-      description: search all restriction fields
-      summary: search all restriction fields
-      tags:
-        - restriction field
-      responses:
-        default:
-          description: Default response for GET /restriction-fields
-      security:
-        - auth: []
+  /applications:
     parameters:
       - name: x-pf-correlation-id
         in: header
@@ -553,32 +543,148 @@ paths:
         schema:
           type: string
           format: uuid
-  /restriction-fields/{restrictionFieldId}:
     get:
-      description: search restriction field by id
-      summary: search restriction field by id
+      description: search all applications
+      summary: search all applications
       tags:
-        - restriction field
+        - application
       responses:
-        default:
-          description: Default response for GET /restriction-fields/{restrictionFieldId}
+        '200':
+          description: successful application search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of applications
+                minimum: 0
+                minItems: 0
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/ApplicationDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '403':
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
       security:
         - auth: []
+  /applications/{applicationId}:
     parameters:
-      - name: restrictionFieldId
+      - name: x-pf-correlation-id
+        in: header
+        description: correlation identifier between request and response
+        required: false
+        example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+        schema:
+          type: string
+          format: uuid
+      - name: applicationId
         in: path
-        description: unique restriction field identification
+        description: unique application identification
+        example: fa2a8bbd-5f1d-4012-a022-12a28f676057
         required: true
         schema:
           type: string
-      - name: x-pf-correlation-id
-        in: header
-        description: correlation identifier between request and response
-        required: false
-        example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
-        schema:
-          type: string
           format: uuid
+    get:
+      description: search application by id
+      summary: search application by id
+      tags:
+        - application
+      responses:
+        '200':
+          description: successful application search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDto'        
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '403':
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
+      security:
+        - auth: []
 components:
   schemas:
     ParentFarmNotFoundException:
@@ -697,8 +803,151 @@ components:
           description: exception error message
           nullable: false
           example: Internal Server Error
-    RestrictionFieldDto:
+    CropEnum:
+      type: string
+      nullable: false
+      description: crop types
+      example: cotton
+      enum:
+        - unknown
+        - cotton
+        - corn
+        - avocado
+        - bean
+        - brachiaria
+        - cereals
+        - citrus
+        - cocoa
+        - coconut
+        - coffee
+        - eucalyptus
+        - grape
+        - oat
+        - orange
+        - peanut
+        - pineapple
+        - potato
+        - rice
+        - soybean
+        - sugarcane
+        - sunflower
+        - wheat
+        - sunn_hemp
+        - pearl_millet
+        - sorghum
+    SeasonDto:
       type: object
+      required:
+        - id
+        - startedIn
+        - finishedIn
+        - crop
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique season identification
+          example: fe1e9d3c-18fa-4e31-86c1-38c33be1856c
+        startedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was started
+          example: 2024-05-27T22:52:44.903Z
+        finishedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was finished
+          example: 2024-05-27T22:52:44.903Z
+        crop:
+          $ref: '#/components/schemas/CropEnum'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the season was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the season was deleted
+          example: 2024-05-27T22:59:44.903Z
+    ApplicationDto:
+      type: object
+      required:
+        - id
+        - season
+        - status
+        - analysisMethod
+        - applicationType
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application identification
+          example: fa2a8bbd-5f1d-4012-a022-12a28f676057
+        season:
+            $ref: '#/components/schemas/SeasonDto'
+        status:
+          type: string
+          nullable: false
+          example: complete
+          enum:
+            - active
+            - in_analysis
+            - complete
+        analysisMethod:
+          type: string
+          nullable: false
+          example: COMPLETE_TARGET
+          enum:
+            - BORDER_TARGET
+            - PARTIAL_TARGET
+            - COMPLETE_TARGET
+        applicationType:
+          type: string
+          nullable: false
+          example: aerial
+          enum:
+            - aerial
+            - terrestrial
+        deletedReason:
+          type: string
+          nullable: true
+          enum:
+            - duplicated_application
+            - wrong_application_data
+            - wrong_service_order_application
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application was deleted
+          example: 2024-05-27T22:59:44.903Z         
     FieldDto:
       type: object
       required:
