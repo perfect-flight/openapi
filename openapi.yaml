@@ -344,6 +344,18 @@ paths:
         schema:
           type: string
           format: uuid
+      - name: page
+        in: query
+        description: current page number
+        required: false
+        schema:
+          $ref: '#/components/schemas/PageQueryParameter'
+      - name: pageSize
+        in: query
+        description: number of applications per page
+        required: false
+        schema:
+          $ref: '#/components/schemas/PageSizeQueryParameter'
   /fields:
     get:
       description: search all fields
@@ -426,6 +438,18 @@ paths:
         schema:
           type: string
           format: uuid
+      - name: page
+        in: query
+        description: current page number
+        required: false
+        schema:
+          $ref: '#/components/schemas/PageQueryParameter'
+      - name: pageSize
+        in: query
+        description: number of applications per page
+        required: false
+        schema:
+          $ref: '#/components/schemas/PageSizeQueryParameter'
   /fields/{fieldId}:
     get:
       description: search field by id
@@ -603,12 +627,6 @@ paths:
       security:
         - auth: []
       parameters:
-        - name: crop
-          in: query
-          description: season crop
-          required: false
-          schema:
-            $ref: '#/components/schemas/CropEnum'
         - name: serviceOrderId
           in: query
           description: unique service order identification
@@ -639,6 +657,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/PageSizeQueryParameter'
+        - name: crop
+          in: query
+          description: season crop
+          required: false
+          schema:
+            $ref: '#/components/schemas/CropEnum'
   /applications/{applicationId}:
     parameters:
       - name: x-pf-correlation-id
