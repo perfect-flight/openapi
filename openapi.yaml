@@ -1084,12 +1084,11 @@ components:
         - id
         - status
         - pilot
+        - startedIn
+        - finishedIn
         - aircraft
         - createdAt
       properties:
-        # runwayDistance
-        # finishedIn
-        # startedIn
         id:
           type: string
           format: uuid
@@ -1102,6 +1101,25 @@ components:
           $ref: '#/components/schemas/PilotDto'
         aircraft:
           $ref: '#/components/schemas/AircraftDto'
+        startedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the schedule was started
+          example: 2024-05-27T22:52:44.903Z
+        finishedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the schedule was finished
+          example: 2024-05-27T22:52:44.903Z
+        runwayDistance:
+          type: number
+          format: float
+          nullable: true
+          example: 10.40
+          default: 0
+          description: runway distance
         swathWidth:
           type: integer
           format: int32
