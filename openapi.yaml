@@ -919,6 +919,56 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was deleted
           example: 2024-05-27T22:59:44.903Z
+    ServiceOrderStatusEnum:
+      type: string
+      nullable: false
+      description: service order status
+      example: complete
+      enum:
+        - waiting_job
+        - in_progress
+        - ready_to_process
+        - processing
+        - complete
+    ServiceOrderDto:
+      type: object
+      required:
+        - id
+        - slug
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique service order identification
+          example: 4b6d7415-a029-457a-9901-cc66f76aded4
+        slug:
+          type: string
+          nullable: false
+          description: service order identification
+          example: "OS-1234"
+        status:
+          $ref: '#/components/schemas/ServiceOrderStatusEnum'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the service order was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the service order was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the service order was deleted
+          example: 2024-05-27T22:59:44.903Z  
     AircraftManufacturerDto:
       type: object
       required:
@@ -1447,6 +1497,8 @@ components:
           description: products of application
           items:
             $ref: '#/components/schemas/ApplicationProductDto'
+        serviceOrder:
+          $ref: '#/components/schemas/ServiceOrderDto'
         averageSuccessScore:
           type: number
           format: double
