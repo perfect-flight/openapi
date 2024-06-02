@@ -1032,6 +1032,49 @@ components:
           example: 2024-05-27T22:59:44.903Z
     PilotDto:
       type: object
+      required:
+        - id
+        - name
+        - licenseId
+        - aerialCompany
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique pilot identification
+          example: d902bd61-6b7f-451e-970c-4576d1fbb238
+        name:
+          type: string
+          nullable: false
+          description: pilot name
+          example: John Due
+        licenseId:
+          type: string
+          nullable: false
+          description: identification of the pilot's license (in Brazil, for example, the document would be the 'Brevê'´
+          example: 459439473
+        aerialCompany:
+          $ref: '#/components/schemas/AerialCompanyDto'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the pilot was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the pilot was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the pilot was deleted
+          example: 2024-05-27T22:59:44.903Z 
     AircraftDto:
       type: object
       required:
@@ -1112,7 +1155,7 @@ components:
           format: date-time
           nullable: false
           description: timestamp in RFC 3339 format (UTC) in which the schedule was finished
-          example: 2024-05-27T22:52:44.903Z
+          example: 2024-05-27T23:32:22.100Z
         runwayDistance:
           type: number
           format: float
