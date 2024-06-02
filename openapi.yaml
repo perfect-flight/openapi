@@ -833,7 +833,7 @@ components:
     WithDeletedQueryParameter:
       type: boolean
       default: false
-      # TODO description:
+      description: in a route with the pages function, this attribute is used to include items already excluded in the response
       example: true
     PageQueryParameter:
       type: integer
