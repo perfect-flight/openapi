@@ -1054,7 +1054,7 @@ components:
           type: string
           nullable: false
           description: identification of the pilot's license (in Brazil, for example, the document would be the 'Brevê'´
-          example: 459439473
+          example: "459439473"
         aerialCompany:
           $ref: '#/components/schemas/AerialCompanyDto'
         createdAt:
@@ -1119,6 +1119,115 @@ components:
           example: 2024-05-27T22:59:44.903Z
     ApplicationFieldDto:
       type: object
+      required:
+        - id
+        - boundaries
+        - area
+        - field
+        - totalTargetFieldArea
+        - totalInternalAppliedArea
+        - totalNotAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalAppliedOverdoseArea
+        - averageUniformityScore
+        - averageFailureScore
+        - averageSuccessScore
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application field identification
+          example: 52a22d4e-69bf-4b6a-9f7f-247ada19104c
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: appplication field boundaries
+          example: "POLYGON ((-64.8000009 -6.7046461,-55.2000008 -10.0284011,-63.3600009 -15.6419963,-64.8000009 -6.7046461))"
+        area:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          # TODO description: 
+          example: 33.43
+        totalTargetFieldArea:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        totalInternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description:
+          nullable: false
+          example: 234.43
+        totalNotAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description:
+          nullable: false
+          example: 234.43
+        totalInternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        totalAppliedOverdoseArea:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        averageUniformityScore:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        averageFailureScore:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        averageSuccessScore:
+          type: number
+          format: double
+          minimum: 0
+          # TODO description: 
+          nullable: false
+          example: 234.43
+        field:
+          $ref: '#/components/schemas/FieldDto'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application field was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application field was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application field was deleted
+          example: 2024-05-27T22:59:44.903Z    
     ApplicationProductDto:
       type: object
     ApplicationScheduleDto:
