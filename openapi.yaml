@@ -919,10 +919,161 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was deleted
           example: 2024-05-27T22:59:44.903Z
+    AircraftManufacturerDto:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique aircraft manufacturer identification
+          example: ca824435-6ecc-4fcc-9ca1-53801a58790f
+        name:
+          type: string
+          nullable: false
+          description: aircraft manufacturer
+          example: Air Tractor
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was deleted
+          example: 2024-05-27T22:59:44.903Z
+    AircraftModelDto:
+      type: object
+      required:
+        - id
+        - name
+        - manufacturer
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique aircraft model identification
+          example: 07d9a0aa-eb71-451d-af05-de2a06d3d888
+        name:
+          type: string
+          nullable: false
+          description: aircraft model
+          example: AT-401
+        manufacturer:
+          $ref: '#/components/schemas/AircraftManufacturerDto'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was deleted
+          example: 2024-05-27T22:59:44.903Z
+    AerialCompanyDto:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique aerial company identification
+          example: 134457d7-58d3-4247-9f67-3fa82b3a0535
+        name:
+          type: string
+          nullable: false
+          description: aerial company name
+          example: Flight Company
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the aerial company was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aerial company was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aerial company was deleted
+          example: 2024-05-27T22:59:44.903Z
     PilotDto:
       type: object
     AircraftDto:
       type: object
+      required:
+        - id
+        - enrollmentId
+        - model
+        - aerialCompany
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique aircraft identification
+          example: 54e5221c-8a04-4f86-a558-d85b9210f0c9
+        enrollmentId:
+          type: string
+          nullable: false
+          description: enrollment aircraft identification
+          example: PT-FFG
+        model:
+          $ref: '#/components/schemas/AircraftModelDto'
+        aerialCompany:
+          $ref: '#/components/schemas/AerialCompanyDto'
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the aircraft was deleted
+          example: 2024-05-27T22:59:44.903Z
     ApplicationFieldDto:
       type: object
     ApplicationProductDto:
