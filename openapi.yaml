@@ -217,19 +217,13 @@ paths:
           description: current page number
           required: false
           schema:
-            type: integer
-            nullable: true
-            example: 2
-            default: 1
+            $ref: '#/components/schemas/PageQueryParameter'
         - name: pageSize
           in: query
           description: number of farms per page
           required: false
           schema:
-            type: integer
-            nullable: true
-            example: 20
-            default: 10
+            $ref: '#/components/schemas/PageSizeQueryParameter'
   /farms/{farmId}:
     get:
       description: search farm by id
@@ -608,6 +602,43 @@ paths:
                 $ref: '#/components/schemas/InternalServerErrorException'
       security:
         - auth: []
+      parameters:
+        - name: crop
+          in: query
+          description: season crop
+          required: false
+          schema:
+            $ref: '#/components/schemas/CropEnum'
+        - name: serviceOrderId
+          in: query
+          description: unique service order identification
+          required: false
+          schema:
+            type: string
+            format: uuid
+            nullable: false
+            example: 46e842b6-f4e8-4503-9c3e-bfdc34604849
+        - name: seasonId
+          in: query
+          description: unique season identification
+          required: false
+          schema:
+            type: string
+            format: uuid
+            nullable: false
+            example: 21c85837-cf04-49a6-9a9e-2661060ef502
+        - name: page
+          in: query
+          description: current page number
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageQueryParameter'
+        - name: pageSize
+          in: query
+          description: number of applications per page
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageSizeQueryParameter'
   /applications/{applicationId}:
     parameters:
       - name: x-pf-correlation-id
@@ -803,6 +834,18 @@ components:
           description: exception error message
           nullable: false
           example: Internal Server Error
+    PageQueryParameter:
+      type: integer
+      format: int32
+      # TODO description: 
+      example: 2
+      default: 1
+    PageSizeQueryParameter:
+      type: integer
+      format: int32
+      # TODO description: 
+      example: 20
+      default: 10
     CropEnum:
       type: string
       description: crop type
@@ -872,6 +915,26 @@ components:
       enum:
         - planned
         - executed
+    ServiceOrderStatusEnum:
+      type: string
+      nullable: false
+      description: service order status
+      example: complete
+      enum:
+        - waiting_job
+        - in_progress
+        - ready_to_process
+        - processing
+        - complete
+    CurrencyEnum:
+      type: string
+      nullable: false
+      description: currency
+      example: BRL
+      enum:
+        - BRL
+        - USD
+        - EUR
     SeasonDto:
       type: object
       required:
@@ -919,17 +982,6 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was deleted
           example: 2024-05-27T22:59:44.903Z
-    ServiceOrderStatusEnum:
-      type: string
-      nullable: false
-      description: service order status
-      example: complete
-      enum:
-        - waiting_job
-        - in_progress
-        - ready_to_process
-        - processing
-        - complete
     ServiceOrderDto:
       type: object
       required:
@@ -1278,15 +1330,6 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application field was deleted
           example: 2024-05-27T22:59:44.903Z    
-    CurrencyEnum:
-      type: string
-      nullable: false
-      description: currency
-      example: BRL
-      enum:
-        - BRL
-        - USD
-        - EUR
     AmountDto:
       type: object
       required:
@@ -1423,6 +1466,7 @@ components:
         - id
         - season
         - status
+        - serviceOrder
         - analysisMethod
         - schedules
         - applicationType
