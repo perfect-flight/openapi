@@ -931,30 +931,30 @@ components:
           format: uuid
           nullable: false
           description: unique aircraft manufacturer identification
-          example: ca824435-6ecc-4fcc-9ca1-53801a58790f
+          example: "ca824435-6ecc-4fcc-9ca1-53801a58790f"
         name:
           type: string
           nullable: false
           description: aircraft manufacturer
-          example: Air Tractor
+          example: "Air Tractor"
         createdAt:
           type: string
           format: date-time
           nullable: false
           description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was created
-          example: 2024-05-27T22:52:44.903Z
+          example: "2024-05-27T22:52:44.903Z"
         updatedAt:
           type: string
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was updated
-          example: 2024-05-27T22:55:44.903Z
+          example: "2024-05-27T22:55:44.903Z"
         deletedAt:
           type: string
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was deleted
-          example: 2024-05-27T22:59:44.903Z
+          example: "2024-05-27T22:59:44.903Z"
     AircraftModelDto:
       type: object
       required:
@@ -1251,6 +1251,7 @@ components:
           nullable: false
           description: amount value
           default: 0
+          example: 332.43
     ApplicationProductDto:
       type: object
       required:
