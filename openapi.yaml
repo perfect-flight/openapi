@@ -1228,8 +1228,70 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application field was deleted
           example: 2024-05-27T22:59:44.903Z    
+    CurrencyEnum:
+      type: string
+      nullable: false
+      description: currency
+      example: BRL
+      enum:
+        - BRL
+        - USD
+        - EUR
+    AmountDto:
+      type: object
+      required:
+        - currency
+        - value
+      properties:
+        currency:
+          $ref: '#/components/schemas/CurrencyEnum'
+        value:
+          type: number
+          format: double
+          nullable: false
+          description: amount value
+          default: 0
     ApplicationProductDto:
       type: object
+      required:
+        - id
+        - dosage
+        - amount
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application product identification
+          example: bac848b2-5137-4228-a61b-0d6a8e84b0a1
+        dosage:
+          type: number
+          format: double
+          nullable: false
+          description: product dosage
+          example: 1.25
+        amount:
+          $ref: '#/components/schemas/AmountDto'
+        # TODO SeasonProductDto product
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application product was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application product was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application product was deleted
+          example: 2024-05-27T22:59:44.903Z
     ApplicationScheduleDto:
       type: object
       required:
@@ -1546,7 +1608,7 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application was deleted
-          example: 2024-05-27T22:59:44.903Z         
+          example: 2024-05-27T22:59:44.903Z  
     FieldDto:
       type: object
       required:
