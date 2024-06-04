@@ -105,6 +105,92 @@ paths:
         - season
       security:
         - auth: []
+  /seasons/{seasonId}:
+    get:
+      description: search season by id
+      summary: search season by id
+      tags:
+        - season
+      responses:
+        '200':
+          description: successful season search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeasonDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '403':
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                type: string
+                format: uuid
+                nullable: false
+                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: season not found
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeasonNotFoundException'
+        '500':
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
+      security:
+        - auth: []
+    parameters:
+      - name: seasonId
+        in: path
+        description: unique season identification
+        example: 3ffa8c69-cc87-46b6-b824-e62feb97f237
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: '#/components/schemas/CorrelationHeader'
   /farms:
     parameters:
       - name: x-pf-correlation-id
@@ -434,6 +520,8 @@ paths:
       summary: search all fields
       tags:
         - field
+      security:
+        - auth: []
       responses:
         '200':
           description: successful field search
@@ -558,10 +646,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: '#/components/schemas/CorrelationHeader'
           content:
             application/json:
               schema:
@@ -573,10 +658,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: '#/components/schemas/CorrelationHeader'
           content:
             application/json:
               schema:
@@ -588,10 +670,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: '#/components/schemas/CorrelationHeader'
           content:
             application/json:
               schema:
@@ -781,6 +860,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenException'
+        '404':
+          description: application not found
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationNotFoundException'
         '500':
           description: internal server error
           headers:
@@ -831,6 +922,40 @@ components:
           description: exception error message
           nullable: false
           example: Farm My Farm with namespace Farms on parent farm bfc780ae-3873-4caf-92d3-9b7ae4ea2a57 already exists
+    SeasonNotFoundException:
+      description: season not found
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: exception error code
+          nullable: false
+          example: not_found_exception
+        message:
+          type: string
+          description: exception error message
+          nullable: false
+          example: Season 3ffa8c69-cc87-46b6-b824-e62feb97f237 not found
+    ApplicationNotFoundException:
+      description: application not found
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: exception error code
+          nullable: false
+          example: not_found_exception
+        message:
+          type: string
+          description: exception error message
+          nullable: false
+          example: Application b361cb2d-587d-40ad-9c2a-695f1df7bf62 not found
     FarmNotFoundException:
       description: farm not found
       type: object
