@@ -1270,6 +1270,7 @@ components:
         - sunn_hemp
         - pearl_millet
         - sorghum
+        - stylosanthes
     ApplicationTypeEnum:
       type: string
       description: application type
