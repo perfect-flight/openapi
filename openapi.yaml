@@ -1025,6 +1025,33 @@ components:
         - BRL
         - USD
         - EUR
+    ApplicationLogFormatEnum:
+      type: string
+      nullable: false
+      description: application log format
+      example: satloc
+      enum:
+        - unknown
+        - agnav
+        - satloc
+        - travicar
+        - agpilotx
+        - galindo
+        - dynanav
+        - trimble
+        - verion
+    ApplicationLogStatusEnum:
+      type: string
+      nullable: false
+      description: application log status
+      example: processed
+      enum:
+        - waiting_upload
+        - uploaded
+        - awaiting_processing
+        - processing
+        - invalidated
+        - processed
     SeasonDto:
       type: object
       required:
@@ -1550,6 +1577,50 @@ components:
           example: 2024-05-27T22:59:44.903Z    
     ApplicationLogDto:
       type: object
+      required:
+        - id
+        - filename
+        - status
+        - format
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application log identification
+          example: d8632348-fb7a-4133-a133-8076445bdade
+        filename:
+          type: string
+          nullable: false
+          description: application log filename
+          example: 03062024.log
+        status:
+          $ref: '#/components/schemas/ApplicationLogStatusEnum'
+        format:
+          $ref: '#/components/schemas/ApplicationLogFormatEnum'
+        metadata:
+          type: object
+          nullable: true
+          description: application log metadata
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application log was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application log was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application log was deleted
+          example: 2024-05-27T22:59:44.903Z
     ApplicationDto:
       type: object
       required:
