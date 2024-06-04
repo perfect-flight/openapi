@@ -16,7 +16,185 @@ tags:
   - name: field
   - name: application
   - name: season
+  - name: aircraft
+  - name: pilot
 paths:
+  /pilots:
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: '#/components/schemas/CorrelationHeader'
+    get:
+      description: search all pilots
+      summary: search all pilots
+      responses:
+        '200':
+          description: successful aircraft search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of pilots
+                minimum: 0
+                minItems: 0
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/PilotDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '403':
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '500':
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
+      parameters:
+        - name: withDeleted
+          in: query
+          description: include deleted pilots
+          required: false
+          schema:
+            $ref: '#/components/schemas/WithDeletedQueryParameter'
+        - name: page
+          in: query
+          description: current page number
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageQueryParameter'
+        - name: pageSize
+          in: query
+          description: number of pilots per page
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageSizeQueryParameter'
+      tags:
+        - pilot
+      security:
+        - auth: []
+  /aircrafts:
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: '#/components/schemas/CorrelationHeader'
+    get:
+      description: search all aircrafts
+      summary: search all aircrafts
+      responses:
+        '200':
+          description: successful aircraft search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of aircrafts
+                minimum: 0
+                minItems: 0
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/AircraftDto'
+        '401':
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedException'
+        '403':
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenException'
+        '500':
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: '#/components/schemas/CorrelationHeader'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorException'
+      parameters:
+        - name: withDeleted
+          in: query
+          description: include deleted aircrafts
+          required: false
+          schema:
+            $ref: '#/components/schemas/WithDeletedQueryParameter'
+        - name: page
+          in: query
+          description: current page number
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageQueryParameter'
+        - name: pageSize
+          in: query
+          description: number of aircrafts per page
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageSizeQueryParameter'
+      tags:
+        - aircraft
+      security:
+        - auth: []
   /seasons:
     parameters:
       - name: x-pf-correlation-id
