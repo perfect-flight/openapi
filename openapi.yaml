@@ -1750,7 +1750,51 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application field was deleted
-          example: 2024-05-27T22:59:44.903Z    
+          example: 2024-05-27T22:59:44.903Z
+    FlowRateDataByGroupDto:
+      type: object
+      required:
+        - flowRateGroup
+        - groupArea
+        - groupPercentual
+        - groupColor
+        - initialGroupRate
+        - finalGroupRate
+      properties:
+        flowRateGroup:
+          type: string
+          nullable: false
+          description: flow rate group index
+          example: "1"
+        groupArea:
+          type: number
+          format: double
+          nullable: false
+          description: flow rate group area
+          example: 98.45
+        groupPercentual:
+          type: number
+          format: double
+          nullable: false
+          description: flow rate group area percentual
+          example: 98.45
+        groupColor:
+          type: string
+          nullable: false
+          description: flow rate group color
+          example: "#FEF60D"
+        initialGroupRate:
+          type: number
+          format: double
+          nullable: false
+          description: initial interval rate group
+          example: 98.45
+        finalGroupRate:
+          type: number
+          format: double
+          nullable: false
+          description: final interval rate group
+          example: 98.45
     AmountDto:
       type: object
       required:
@@ -2041,6 +2085,19 @@ components:
           type: number
           nullable: true
           example: 98.45
+        plannedAverageRateFlow:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        flowRateDataByGroup:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: flow rate data of application
+          items:
+            $ref: '#/components/schemas/FlowRateDataByGroupDto'
         averageSpeed:
           format: double
           type: number
