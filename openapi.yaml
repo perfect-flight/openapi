@@ -25,19 +25,19 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
     get:
       description: search all pilots
       summary: search all pilots
       responses:
-        '200':
+        "200":
           description: successful aircraft search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -47,62 +47,62 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/PilotDto'
-        '401':
+                  $ref: "#/components/schemas/PilotDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       parameters:
         - name: withDeleted
           in: query
           description: include deleted pilots
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: page
           in: query
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of pilots per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
       tags:
         - pilot
       security:
@@ -113,19 +113,19 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
     get:
       description: search all aircrafts
       summary: search all aircrafts
       responses:
-        '200':
+        "200":
           description: successful aircraft search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -135,62 +135,62 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/AircraftDto'
-        '401':
+                  $ref: "#/components/schemas/AircraftDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       parameters:
         - name: withDeleted
           in: query
           description: include deleted aircrafts
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: page
           in: query
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of aircrafts per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
       tags:
         - aircraft
       security:
@@ -201,19 +201,19 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
     get:
       description: search all seasons
       summary: search all seasons
       responses:
-        '200':
+        "200":
           description: successful season search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -223,62 +223,62 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/SeasonDto'
-        '401':
+                  $ref: "#/components/schemas/SeasonDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       parameters:
         - name: withDeleted
           in: query
           description: include deleted seasons
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: page
           in: query
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of seasons per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
       tags:
         - season
       security:
@@ -290,31 +290,31 @@ paths:
       tags:
         - season
       responses:
-        '200':
+        "200":
           description: successful season search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeasonDto'
-        '401':
+                $ref: "#/components/schemas/SeasonDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
@@ -328,31 +328,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
+                $ref: "#/components/schemas/ForbiddenException"
+        "404":
           description: season not found
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeasonNotFoundException'
-        '500':
+                $ref: "#/components/schemas/SeasonNotFoundException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
     parameters:
@@ -368,114 +368,114 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
   /farms:
     parameters:
       - name: x-pf-correlation-id
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
     post:
       description: create a new farm
       summary: create a new farm
       tags:
         - farm
       responses:
-        '201':
+        "201":
           description: farm was successfully created
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmCreatedDto'
-        '400':
+                $ref: "#/components/schemas/FarmCreatedDto"
+        "400":
           description: farm already exists
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmAlreadyExistsException'
-        '401':
+                $ref: "#/components/schemas/FarmAlreadyExistsException"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '422':
+                $ref: "#/components/schemas/ForbiddenException"
+        "422":
           description: parent farm not found
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParentFarmNotFoundException'    
-        '500':
+                $ref: "#/components/schemas/ParentFarmNotFoundException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
       requestBody:
         required: true
         content:
           application/json:
-              schema:
-                $ref: '#/components/schemas/CreateFarmDto'   
+            schema:
+              $ref: "#/components/schemas/CreateFarmDto"
     get:
       description: search all farms
       summary: search all farms
       tags:
         - farm
       responses:
-        '200':
+        "200":
           description: successful farm search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -485,43 +485,43 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/FarmDto'
-        '401':
+                  $ref: "#/components/schemas/FarmDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
       parameters:
@@ -530,7 +530,7 @@ paths:
           description: include deleted farms
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: namespace
           in: query
           description: farm namespace
@@ -561,13 +561,13 @@ paths:
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of farms per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
   /farms/{farmId}:
     get:
       description: search farm by id
@@ -575,31 +575,31 @@ paths:
       tags:
         - farm
       responses:
-        '200':
+        "200":
           description: successful farm search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmDto'
-        '401':
+                $ref: "#/components/schemas/FarmDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
@@ -613,31 +613,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
+                $ref: "#/components/schemas/ForbiddenException"
+        "404":
           description: farm not found
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmNotFoundException'
-        '500':
+                $ref: "#/components/schemas/FarmNotFoundException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
     parameters:
@@ -653,7 +653,7 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
   /farms/{farmId}/fields:
     get:
       description: search all fields by farm id
@@ -671,19 +671,19 @@ paths:
           description: include deleted fields
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: page
           in: query
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of applications per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
     parameters:
       - name: farmId
         in: path
@@ -701,14 +701,14 @@ paths:
       security:
         - auth: []
       responses:
-        '200':
+        "200":
           description: successful field search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -718,68 +718,68 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/FieldDto'
-        '401':
+                  $ref: "#/components/schemas/FieldDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       parameters:
         - name: withDeleted
           in: query
           description: include deleted fields
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: page
           in: query
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of applications per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
     parameters:
       - name: x-pf-correlation-id
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
   /fields/{fieldId}:
     get:
       description: search field by id
@@ -787,7 +787,7 @@ paths:
       tags:
         - field
       responses:
-        '200':
+        "200":
           description: successful field search
           headers:
             x-pf-correlation-id:
@@ -801,8 +801,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FieldDto'
-        '401':
+                $ref: "#/components/schemas/FieldDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
@@ -816,43 +816,43 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
+                $ref: "#/components/schemas/ForbiddenException"
+        "404":
           description: field not found
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FieldNotFoundException'
-        '500':
+                $ref: "#/components/schemas/FieldNotFoundException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
     parameters:
@@ -868,28 +868,28 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
   /applications:
     parameters:
       - name: x-pf-correlation-id
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
     get:
       description: search all applications
       summary: search all applications
       tags:
         - application
       responses:
-        '200':
+        "200":
           description: successful application search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -899,43 +899,43 @@ paths:
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: '#/components/schemas/ApplicationDto'
-        '401':
+                  $ref: "#/components/schemas/ApplicationDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '500':
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
       parameters:
@@ -944,7 +944,7 @@ paths:
           description: include deleted applications
           required: false
           schema:
-            $ref: '#/components/schemas/WithDeletedQueryParameter'
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
         - name: serviceOrderId
           in: query
           description: unique service order identification
@@ -968,19 +968,19 @@ paths:
           description: current page number
           required: false
           schema:
-            $ref: '#/components/schemas/PageQueryParameter'
+            $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
           description: number of applications per page
           required: false
           schema:
-            $ref: '#/components/schemas/PageSizeQueryParameter'
+            $ref: "#/components/schemas/PageSizeQueryParameter"
         - name: crop
           in: query
           description: season crop
           required: false
           schema:
-            $ref: '#/components/schemas/CropEnum'
+            $ref: "#/components/schemas/CropEnum"
         - name: pilotId
           in: query
           description: unique pilot identification
@@ -1010,20 +1010,20 @@ paths:
             example: 075773c3-0f4b-4ac0-b74b-6e777ec0a4bd
         - name: startedIn
           in: query
-          description: unique farm identification
+          description: application start date
           required: false
           schema:
             type: string
-            format: uuid
+            format: date-time
             nullable: false
             example: 2024-06-01T22:52:44.903Z
         - name: finishedIn
           in: query
-          description: unique farm identification
+          description: application end date
           required: false
           schema:
             type: string
-            format: uuid
+            format: date-time
             nullable: false
             example: 2024-06-31T22:52:44.903Z
   /applications/{applicationId}:
@@ -1032,7 +1032,7 @@ paths:
         in: header
         required: false
         schema:
-          $ref: '#/components/schemas/CorrelationHeader'
+          $ref: "#/components/schemas/CorrelationHeader"
       - name: applicationId
         in: path
         description: unique application identification
@@ -1047,66 +1047,66 @@ paths:
       tags:
         - application
       responses:
-        '200':
+        "200":
           description: successful application search
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationDto'        
-        '401':
+                $ref: "#/components/schemas/ApplicationDto"
+        "401":
           description: unauthorized
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedException'
-        '403':
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
           description: forbidden
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenException'
-        '404':
+                $ref: "#/components/schemas/ForbiddenException"
+        "404":
           description: application not found
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationNotFoundException'
-        '500':
+                $ref: "#/components/schemas/ApplicationNotFoundException"
+        "500":
           description: internal server error
           headers:
             x-pf-correlation-id:
               required: true
               description: correlation identifier between request and response
               schema:
-                $ref: '#/components/schemas/CorrelationHeader'
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorException'
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
 components:
@@ -1275,13 +1275,13 @@ components:
     PageQueryParameter:
       type: integer
       format: int32
-      # TODO description: 
+      # TODO description:
       example: 2
       default: 1
     PageSizeQueryParameter:
       type: integer
       format: int32
-      # TODO description: 
+      # TODO description:
       example: 20
       default: 10
     CropEnum:
@@ -1429,7 +1429,7 @@ components:
           description: timestamp in RFC 3339 format (UTC) in which the season was finished
           example: 2024-05-27T22:52:44.903Z
         crop:
-          $ref: '#/components/schemas/CropEnum'
+          $ref: "#/components/schemas/CropEnum"
         createdAt:
           type: string
           format: date-time
@@ -1468,7 +1468,7 @@ components:
           description: service order identification
           example: "OS-1234"
         status:
-          $ref: '#/components/schemas/ServiceOrderStatusEnum'
+          $ref: "#/components/schemas/ServiceOrderStatusEnum"
         createdAt:
           type: string
           format: date-time
@@ -1486,7 +1486,7 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the service order was deleted
-          example: 2024-05-27T22:59:44.903Z  
+          example: 2024-05-27T22:59:44.903Z
     AircraftManufacturerDto:
       type: object
       required:
@@ -1543,7 +1543,7 @@ components:
           description: aircraft model
           example: AT-401
         manufacturer:
-          $ref: '#/components/schemas/AircraftManufacturerDto'
+          $ref: "#/components/schemas/AircraftManufacturerDto"
         createdAt:
           type: string
           format: date-time
@@ -1624,7 +1624,7 @@ components:
           description: identification of the pilot's license (in Brazil, for example, the document would be the 'Brevê'´
           example: "459439473"
         aerialCompany:
-          $ref: '#/components/schemas/AerialCompanyDto'
+          $ref: "#/components/schemas/AerialCompanyDto"
         createdAt:
           type: string
           format: date-time
@@ -1642,7 +1642,7 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the pilot was deleted
-          example: 2024-05-27T22:59:44.903Z 
+          example: 2024-05-27T22:59:44.903Z
     AircraftDto:
       type: object
       required:
@@ -1664,9 +1664,9 @@ components:
           description: enrollment aircraft identification
           example: PT-FFG
         model:
-          $ref: '#/components/schemas/AircraftModelDto'
+          $ref: "#/components/schemas/AircraftModelDto"
         aerialCompany:
-          $ref: '#/components/schemas/AerialCompanyDto'
+          $ref: "#/components/schemas/AerialCompanyDto"
         createdAt:
           type: string
           format: date-time
@@ -1718,13 +1718,13 @@ components:
           format: double
           minimum: 0
           nullable: false
-          # TODO description: 
+          # TODO description:
           example: 33.43
         totalTargetFieldArea:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         totalInternalAppliedArea:
@@ -1745,39 +1745,39 @@ components:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         totalAppliedOverdoseArea:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         averageUniformityScore:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         averageFailureScore:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         averageSuccessScore:
           type: number
           format: double
           minimum: 0
-          # TODO description: 
+          # TODO description:
           nullable: false
           example: 234.43
         field:
-          $ref: '#/components/schemas/FieldDto'
+          $ref: "#/components/schemas/FieldDto"
         createdAt:
           type: string
           format: date-time
@@ -1847,7 +1847,7 @@ components:
         - value
       properties:
         currency:
-          $ref: '#/components/schemas/CurrencyEnum'
+          $ref: "#/components/schemas/CurrencyEnum"
         value:
           type: number
           format: double
@@ -1876,7 +1876,7 @@ components:
           description: product dosage
           example: 1.25
         amount:
-          $ref: '#/components/schemas/AmountDto'
+          $ref: "#/components/schemas/AmountDto"
         # TODO SeasonProductDto product
         createdAt:
           type: string
@@ -1914,11 +1914,11 @@ components:
           description: unique application schedule identification
           example: ce75ce52-5064-485a-87a5-aa0f1ebe0c03
         status:
-          $ref: '#/components/schemas/ApplicationScheduleStatusEnum'
+          $ref: "#/components/schemas/ApplicationScheduleStatusEnum"
         pilot:
-          $ref: '#/components/schemas/PilotDto'
+          $ref: "#/components/schemas/PilotDto"
         aircraft:
-          $ref: '#/components/schemas/AircraftDto'
+          $ref: "#/components/schemas/AircraftDto"
         startedIn:
           type: string
           format: date-time
@@ -1967,7 +1967,7 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application schedule was deleted
-          example: 2024-05-27T22:59:44.903Z    
+          example: 2024-05-27T22:59:44.903Z
     ApplicationLogDto:
       type: object
       required:
@@ -1989,9 +1989,9 @@ components:
           description: application log filename
           example: 03062024.log
         status:
-          $ref: '#/components/schemas/ApplicationLogStatusEnum'
+          $ref: "#/components/schemas/ApplicationLogStatusEnum"
         format:
-          $ref: '#/components/schemas/ApplicationLogFormatEnum'
+          $ref: "#/components/schemas/ApplicationLogFormatEnum"
         metadata:
           type: object
           nullable: true
@@ -2056,15 +2056,15 @@ components:
           description: unique application identification
           example: fa2a8bbd-5f1d-4012-a022-12a28f676057
         season:
-          $ref: '#/components/schemas/SeasonDto'
+          $ref: "#/components/schemas/SeasonDto"
         status:
-          $ref: '#/components/schemas/ApplicationStatusEnum'
+          $ref: "#/components/schemas/ApplicationStatusEnum"
         analysisMethod:
-          $ref: '#/components/schemas/ApplicationAnalysisMethodEnum'
+          $ref: "#/components/schemas/ApplicationAnalysisMethodEnum"
         applicationType:
-          $ref: '#/components/schemas/ApplicationTypeEnum'
+          $ref: "#/components/schemas/ApplicationTypeEnum"
         deletedReason:
-          $ref: '#/components/schemas/ApplicationDeletedReasonEnum'
+          $ref: "#/components/schemas/ApplicationDeletedReasonEnum"
         fields:
           type: array
           minItems: 0
@@ -2072,7 +2072,7 @@ components:
           uniqueItems: true
           description: fields of application
           items:
-            $ref: '#/components/schemas/ApplicationFieldDto'
+            $ref: "#/components/schemas/ApplicationFieldDto"
         schedules:
           type: array
           minItems: 1
@@ -2080,7 +2080,7 @@ components:
           uniqueItems: true
           description: schedules of application
           items:
-            $ref: '#/components/schemas/ApplicationScheduleDto'
+            $ref: "#/components/schemas/ApplicationScheduleDto"
         logs:
           type: array
           minItems: 0
@@ -2088,7 +2088,7 @@ components:
           uniqueItems: true
           description: logs of application
           items:
-            $ref: '#/components/schemas/ApplicationLogDto'
+            $ref: "#/components/schemas/ApplicationLogDto"
         products:
           type: array
           minItems: 0
@@ -2096,9 +2096,9 @@ components:
           uniqueItems: true
           description: products of application
           items:
-            $ref: '#/components/schemas/ApplicationProductDto'
+            $ref: "#/components/schemas/ApplicationProductDto"
         serviceOrder:
-          $ref: '#/components/schemas/ServiceOrderDto'
+          $ref: "#/components/schemas/ServiceOrderDto"
         averageSuccessScore:
           type: number
           format: double
@@ -2144,7 +2144,7 @@ components:
           uniqueItems: true
           description: flow rate data of application
           items:
-            $ref: '#/components/schemas/FlowRateDataByGroupDto'
+            $ref: "#/components/schemas/FlowRateDataByGroupDto"
         averageSpeed:
           format: double
           type: number
@@ -2286,14 +2286,14 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application was deleted
-          example: 2024-05-27T22:59:44.903Z  
+          example: 2024-05-27T22:59:44.903Z
     FieldDto:
       type: object
       required:
         - id
         - name
         - boundaries
-        - area 
+        - area
         - createdAt
       properties:
         id:
@@ -2427,7 +2427,7 @@ components:
         parentFarmId:
           type: string
           format: uuid
-          description: |- 
+          description: |-
             identification of the parent farm.
 
             enter this attribute when you want to associate a farm with an existing one (as if it were a tree structure).
@@ -2465,8 +2465,7 @@ components:
   securitySchemes:
     auth:
       description: "Authorization Server"
-      type: oauth2     
+      type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: 'https://auth.sandbox.perfectflight.com.br/connect/token'
-        
+          tokenUrl: "https://auth.sandbox.perfectflight.com.br/connect/token"
