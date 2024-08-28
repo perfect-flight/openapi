@@ -1014,6 +1014,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/ApplicationDateTypeEnum"
+        - name: applicationType
+          in: query
+          description: application type
+          required: false
+          schema:
+            $ref: "#/components/schemas/ApplicationTypeEnum"
         - name: startedIn
           in: query
           description: application start date
