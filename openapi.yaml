@@ -1859,6 +1859,50 @@ components:
           nullable: false
           description: final interval rate group
           example: 98.45
+    HeightDataByGroupDto:
+      type: object
+      required:
+        - heightGroup
+        - groupArea
+        - groupPercentual
+        - groupColor
+        - initialGroupHeight
+        - finalGroupHeight
+      properties:
+        heightGroup:
+          type: string
+          nullable: false
+          description: height group index
+          example: "1"
+        groupArea:
+          type: number
+          format: double
+          nullable: false
+          description: height group area
+          example: 98.45
+        groupPercentual:
+          type: number
+          format: double
+          nullable: false
+          description: height group area percentual
+          example: 98.45
+        groupColor:
+          type: string
+          nullable: false
+          description: height group color
+          example: "#FEF60D"
+        initialGroupHeight:
+          type: number
+          format: double
+          nullable: false
+          description: initial interval height group
+          example: 98.45
+        finalGroupHeight:
+          type: number
+          format: double
+          nullable: false
+          description: final interval height group
+          example: 98.45
     AmountDto:
       type: object
       required:
@@ -2174,6 +2218,19 @@ components:
           type: number
           nullable: true
           example: 98.45
+        plannedAverageHeight:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        heightDataByGroup:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: height data of application
+          items:
+            $ref: '#/components/schemas/HeightDataByGroupDto'
         totalInternalAppliedOverlapArea:
           format: double
           type: number
