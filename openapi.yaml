@@ -1328,6 +1328,7 @@ components:
         - pearl_millet
         - sorghum
         - stylosanthes
+        - cover
     ApplicationTypeEnum:
       type: string
       description: application type
