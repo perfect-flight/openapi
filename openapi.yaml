@@ -1329,6 +1329,7 @@ components:
         - sorghum
         - stylosanthes
         - cover
+        - millet
     ApplicationTypeEnum:
       type: string
       description: application type
