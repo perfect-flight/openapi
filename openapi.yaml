@@ -1330,6 +1330,7 @@ components:
         - stylosanthes
         - cover
         - millet
+        - banana
     ApplicationTypeEnum:
       type: string
       description: application type
