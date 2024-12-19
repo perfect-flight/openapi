@@ -1602,6 +1602,11 @@ components:
           nullable: false
           description: aerial company name
           example: Flight Company
+        documentNumber:
+          type: string
+          nullable: true
+          description: aerial company document number
+          example: 00.000.000/0000-00
         createdAt:
           type: string
           format: date-time
