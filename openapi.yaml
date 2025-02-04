@@ -18,7 +18,110 @@ tags:
   - name: season
   - name: aircraft
   - name: pilot
+  - name: suggested products
 paths:
+  /suggested-products:
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: "#/components/schemas/CorrelationHeader"
+    get:
+      description: search all suggested products
+      summary: search all suggested products
+      responses:
+        "200":
+          description: successful suggested products search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of suggested products
+                minimum: 0
+                minItems: 0
+                uniqueItems: true
+                items:
+                  $ref: "#/components/schemas/SuggestedProductDto"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
+      parameters:
+        - name: name
+          in: query
+          description: suggested product name
+          required: false
+          schema:
+            type: string
+            nullable: true
+            example: Suggested Product Example
+        - name: classType
+          in: query
+          description: suggested product class type
+          required: false
+          schema:
+            $ref: "#/components/schemas/ProductClassTypeEnum"
+        - name: withDeleted
+          in: query
+          description: include deleted suggested products
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
+        - name: page
+          in: query
+          description: current page number
+          required: false
+          schema:
+            $ref: "#/components/schemas/PageQueryParameter"
+        - name: pageSize
+          in: query
+          description: number of suggested products per page
+          required: false
+          schema:
+            $ref: "#/components/schemas/PageSizeQueryParameter"
+      tags:
+        - suggested products
+      security:
+        - auth: []
   /pilots:
     parameters:
       - name: x-pf-correlation-id
@@ -1331,6 +1434,91 @@ components:
         - cover
         - millet
         - banana
+    ProductClassTypeEnum:
+      type: string
+      description: product class type
+      example: fungicide
+      enum:
+        - unknown
+        - ripener
+        - adjuvant
+        - insecticide
+        - acaricide
+        - fungicide
+        - nematicide
+        - herbicide
+        - bactericide
+        - biological
+        - adulticide
+        - foliar_nutrition
+        - larvicide
+        - fertilizer
+        - phytohormone
+        - ant_killer
+        - seeding
+        - microbiological
+        - plant_activator
+        - termiticide
+        - pheromone
+        - plant_growth_regulator
+        - molluscicide
+        - seed_protectant
+        - biological_control_agent
+        - acaricide_bactericide_fungicide
+        - acaricide_ant_killer_insecticide
+        - acaricide_fungicide
+        - acaricide_fungicide_insecticide
+        - acaricide_insecticide
+        - acaricide_insecticide_nematicide
+        - acaricide_microbiological
+        - acaricide_microbiological_insecticide_microbiological
+        - bactericide_fungicide
+        - bactericide_microbiological_fungicide_microbiological
+        - termiticide_ant_killer_insecticide
+        - termiticide_insecticide
+        - pheromone_insecticide
+        - ant_killer_fungicide_herbicide_insecticide_nematicide
+        - ant_killer_fungicide_herbicide_nematicide
+        - ant_killer_insecticide
+        - fungicide_nematicide
+        - fungicide_nematicide_microbiological
+        - fungicide_herbicide_nematicide
+        - fungicide_insecticide
+        - fungicide_insecticide_nematicide
+        - fungicide_microbiological
+        - fungicide_microbiological_nematicide_microbiological
+        - herbicide_plant_growth_regulator
+        - insecticide_plant_growth_regulator
+        - fumigant_insecticide
+        - insecticide_microbiological
+        - insecticide_nematicide
+        - nematicide_microbiological
+    ProductServiceTypeEnum:
+      type: string
+      description: product service type
+      example: pesticide_application
+      enum:
+        - pesticide_application
+        - adjuvant_application
+        - fertilizer_application
+        - seeding
+        - unknown
+    MeasurementUnitEnum:
+      type: string
+      description: measurement unit
+      example: l
+      enum:
+        - l
+        - ha
+        - ac
+        - m
+        - kg
+        - km
+        - "°"
+        - "°c"
+        - "°f"
+        - mm
+        - "%"
     ApplicationTypeEnum:
       type: string
       description: application type
@@ -2370,6 +2558,56 @@ components:
           format: date-time
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application was deleted
+          example: 2024-05-27T22:59:44.903Z
+    SuggestedProductDto:
+      type: object
+      required:
+        - id
+        - name
+        - serviceType
+        - classType
+        - manufacturerName
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique suggested product identification
+          example: efae9cea-767f-4d28-a4e6-891ee7b0e998
+        name:
+          type: string
+          nullable: false
+          description: suggested product name
+          example: Suggested Product Example
+        manufacturerName:
+          type: string
+          nullable: false
+          description: name of the manufacturer of the suggested product
+          example: Manufacturer Example
+        classType:
+          $ref: "#/components/schemas/ProductClassTypeEnum"
+        serviceType:
+          $ref: "#/components/schemas/ProductServiceTypeEnum"
+        measurementUnit:
+          $ref: "#/components/schemas/MeasurementUnitEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the suggested product was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the suggested product was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the suggested product was deleted
           example: 2024-05-27T22:59:44.903Z
     FieldDto:
       type: object
