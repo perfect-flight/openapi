@@ -2790,4 +2790,4 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: "https://auth.sandbox.perfectflight.com.br/connect/token"
+          tokenUrl: "https://auth.sandbox.perfectflight.com.br/oauth2/token"
