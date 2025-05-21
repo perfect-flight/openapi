@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.0.0
+  version: 1.0.1
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -19,6 +19,7 @@ tags:
   - name: aircraft
   - name: pilot
   - name: suggested products
+  - name: pre flight
 paths:
   /suggested-products:
     parameters:
@@ -134,7 +135,7 @@ paths:
       summary: search all pilots
       responses:
         "200":
-          description: successful aircraft search
+          description: successful pilot search
           headers:
             x-pf-correlation-id:
               required: true
@@ -1089,10 +1090,7 @@ paths:
           description: unique pilot identification
           required: false
           schema:
-            type: string
-            format: uuid
-            nullable: false
-            example: 64ca523b-5d08-4016-a174-e87b74118742
+            $ref: "#/components/schemas/PilotId"
         - name: aerialCompanyId
           in: query
           description: unique aerial company identification
@@ -1224,6 +1222,99 @@ paths:
                 $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
+  /pre-flight:
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: "#/components/schemas/CorrelationHeader"
+    post:
+      description: create a new pre flight
+      summary: create a new pre flight
+      tags:
+        - pre flight
+      responses:
+        "201":
+          description: pre flight was successfully created
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: "#/components/schemas/PreFlightCreatedDto"
+        "400":
+          description: pre flight already exists
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: "#/components/schemas/PreFlightAlreadyExistsException"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "422":
+          description: TODO
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParentFarmNotFoundException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
+      security:
+        - auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePreFlightDto"
 components:
   schemas:
     ParentFarmNotFoundException:
@@ -1823,11 +1914,7 @@ components:
         - createdAt
       properties:
         id:
-          type: string
-          format: uuid
-          nullable: false
-          description: unique pilot identification
-          example: d902bd61-6b7f-451e-970c-4576d1fbb238
+          $ref: "#/components/schemas/PilotId"
         name:
           type: string
           nullable: false
@@ -1868,11 +1955,7 @@ components:
         - createdAt
       properties:
         id:
-          type: string
-          format: uuid
-          nullable: false
-          description: unique aircraft identification
-          example: 54e5221c-8a04-4f86-a558-d85b9210f0c9
+          $ref: "#/components/schemas/AircraftId"
         enrollmentId:
           type: string
           nullable: false
@@ -2784,6 +2867,68 @@ components:
           nullable: false
           description: timestamp in RFC 3339 format (UTC) in which the farm was created
           example: 2024-05-27T22:52:44.903Z
+    PilotId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique pilot identification
+      example: "d902bd61-6b7f-451e-970c-4576d1fbb238"
+    AircraftId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique aircraft identification
+      example: "54e5221c-8a04-4f86-a558-d85b9210f0c9"
+    TractorId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique tractor identification
+      example: "771bc011-22b9-439a-b0b4-0e7ffe3cc93e"
+    CreatePreFlightDto:
+      type: object
+      properties:
+        slug:
+          type: string
+          nullable: true
+          description: service order identification
+          default: "OS-XXXXXXXXXX"
+          example: "OS-1234567899"
+        observation:
+          type: string
+          nullable: true
+          description: pre flight observation
+          example: "my pre flight comments"
+        preFlightSeasonId:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique pre flight season identification
+          example: "134457d7-58d3-4247-9f67-3fa82b3a0535"
+        preFlightPilot:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: pilots of pre flight
+          items:
+            $ref: "#/components/schemas/PilotId"
+        preFlightAircraft:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: aircrafts of pre flight
+          items:
+            $ref: "#/components/schemas/AircraftId"
+        preFlightTractor:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: tractors of pre flight
+          items:
+            $ref: "#/components/schemas/TractorId"
   securitySchemes:
     auth:
       description: "Authorization Server"
