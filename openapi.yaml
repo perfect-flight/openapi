@@ -1243,22 +1243,10 @@ paths:
               description: correlation identifier between request and response
               schema:
                 $ref: "#/components/schemas/CorrelationHeader"
-          # content:
-          #   application/json:
-          #     schema:
-          #       $ref: "#/components/schemas/PreFlightCreatedDto"
-        "400":
-          description: pre flight already exists
-          headers:
-            x-pf-correlation-id:
-              required: true
-              description: correlation identifier between request and response
+          content:
+            application/json:
               schema:
-                $ref: "#/components/schemas/CorrelationHeader"
-          # content:
-          #   application/json:
-          #     schema:
-          #       $ref: "#/components/schemas/PreFlightAlreadyExistsException"
+                $ref: "#/components/schemas/PreFlightCreatedDto"
         "401":
           description: unauthorized
           headers:
@@ -1283,18 +1271,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ForbiddenException"
-        "422":
-          description: TODO
-          headers:
-            x-pf-correlation-id:
-              required: true
-              description: correlation identifier between request and response
-              schema:
-                $ref: "#/components/schemas/CorrelationHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ParentFarmNotFoundException"
         "500":
           description: internal server error
           headers:
@@ -2873,6 +2849,18 @@ components:
       nullable: false
       description: unique pilot identification
       example: "d902bd61-6b7f-451e-970c-4576d1fbb238"
+    FieldId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique field identification
+      example: "917bfcf8-8dbb-4e68-b4a5-f1e960669b14"
+    RestrictionFieldId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique restriction field identification
+      example: "d902bd61-6b7f-451e-970c-4576d1fbb238"
     AircraftId:
       type: string
       format: uuid
@@ -2908,7 +2896,6 @@ components:
         preFlightPilot:
           type: array
           minItems: 0
-          nullable: true
           uniqueItems: true
           description: pilots of pre flight
           items:
@@ -2916,7 +2903,6 @@ components:
         preFlightAircraft:
           type: array
           minItems: 0
-          nullable: true
           uniqueItems: true
           description: aircrafts of pre flight
           items:
@@ -2924,11 +2910,89 @@ components:
         preFlightTractor:
           type: array
           minItems: 0
-          nullable: true
           uniqueItems: true
           description: tractors of pre flight
           items:
             $ref: "#/components/schemas/TractorId"
+        preFlightField:
+          type: array
+          minItems: 0
+          uniqueItems: true
+          description: fields of pre flight
+          items:
+            $ref: "#/components/schemas/CreatePreFlightFieldDto"
+        preFlightProduct:
+          type: array
+          minItems: 0
+          uniqueItems: true
+          description: products of pre flight
+          items:
+            $ref: "#/components/schemas/CreatePreFlightProductDto"
+        preFlightRestrictionField:
+          type: array
+          minItems: 0
+
+          uniqueItems: true
+          description: restriction fields of pre flight
+          items:
+            $ref: "#/components/schemas/CreatePreFlightRestrictionFieldDto"
+    
+    CreatePreFlightFieldDto:
+      type: object
+      required:
+        - fieldId
+      properties:
+        fieldId:
+          $ref: "#/components/schemas/FieldId"
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: object in wkt format that represents the georeferencing of the field
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+    CreatePreFlightProductDto:
+      type: object
+      required:
+        - customerProductId
+        - dosage
+      properties:
+        customerProductId:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique customer product identification
+          example: "d902bd61-6b7f-451e-970c-4576d1fbb238"
+        dosage:
+          type: number
+          nullable: false
+          description: product dosage
+          example: 3.54
+    CreatePreFlightRestrictionFieldDto:
+      type: object
+      required:
+        - restrictionFieldId
+      properties:
+        restrictionFieldId:
+          $ref: "#/components/schemas/RestrictionFieldId"
+        warningDistance:
+          type: number
+          default: 0
+          example: 32.54
+          description: |-
+            distance in meters from the restriction field to the application field.
+
+            this distance is used to generate a warning when the aircraft is within this distance from the restriction field.
+    PreFlightCreatedDto:
+      type: object
+      required:
+        - slug
+      properties:
+        slug:
+          type: string
+          nullable: true
+          description: service order identification
+          default: "OS-XXXXXXXXXX"
+          example: "OS-1234567899"
   securitySchemes:
     auth:
       description: "Authorization Server"
