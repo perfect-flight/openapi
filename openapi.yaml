@@ -1501,6 +1501,9 @@ components:
         - cover
         - millet
         - banana
+        - tobacco
+        - sesame
+        - seed_corn
     ProductClassTypeEnum:
       type: string
       description: product class type
