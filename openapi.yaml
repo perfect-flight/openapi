@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.0.1
+  version: 1.2.0
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -15,6 +15,7 @@ tags:
   - name: farm
   - name: field
   - name: application
+  - name: product
   - name: season
   - name: aircraft
   - name: pilot
@@ -123,6 +124,76 @@ paths:
         - suggested products
       security:
         - auth: []
+  /products:
+    parameters:
+      - name: x-pf-correlation-id
+        in: header
+        required: false
+        schema:
+          $ref: "#/components/schemas/CorrelationHeader"
+    post:
+      description: create a new product
+      summary: create a new product
+      tags:
+        - product
+      security:
+        - auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductDto"
+      responses:
+        "201":
+          description: product was successfully created
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductCreatedDto"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
+
   /pilots:
     parameters:
       - name: x-pf-correlation-id
@@ -306,6 +377,68 @@ paths:
         required: false
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
+    post:
+      description: create a new season
+      summary: create a new season
+      tags:
+        - season
+      security:
+        - auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSeasonDto"
+      responses:
+        "201":
+          description: season was successfully created
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeasonCreatedDto"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
     get:
       description: search all seasons
       summary: search all seasons
@@ -878,6 +1011,68 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
+    post:
+      description: create a new field
+      summary: create a new field
+      tags:
+        - field
+      security:
+        - auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFieldDto"
+      responses:
+        "201":
+          description: field was successfully created
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldCreatedDto"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
     parameters:
       - name: x-pf-correlation-id
         in: header
@@ -1691,11 +1886,7 @@ components:
         - createdAt
       properties:
         id:
-          type: string
-          format: uuid
-          nullable: false
-          description: unique season identification
-          example: fe1e9d3c-18fa-4e31-86c1-38c33be1856c
+          $ref: "#/components/schemas/SeasonId"
         startedIn:
           type: string
           format: date-time
@@ -2846,6 +3037,46 @@ components:
           nullable: false
           description: timestamp in RFC 3339 format (UTC) in which the farm was created
           example: 2024-05-27T22:52:44.903Z
+    FieldCreatedDto:
+      type: object
+    ProductCreatedDto:
+      type: object
+    SeasonCreatedDto:
+      type: object
+      required:
+        - id
+        - startedIn
+        - finishedIn
+        - crop
+      properties:
+        id:
+          $ref: "#/components/schemas/SeasonId"
+        startedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was started
+          example: 2024-05-27T22:52:44.903Z
+        finishedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was finished
+          example: 2024-05-27T22:52:44.903Z
+        crop:
+          $ref: "#/components/schemas/CropEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the season was updated
+          example: 2024-05-27T22:55:44.903Z
     PilotId:
       type: string
       format: uuid
@@ -2876,6 +3107,12 @@ components:
       nullable: false
       description: unique tractor identification
       example: "771bc011-22b9-439a-b0b4-0e7ffe3cc93e"
+    SeasonId:
+      type: string
+      format: uuid
+      nullable: false
+      description: unique season identification
+      example: "fe1e9d3c-18fa-4e31-86c1-38c33be1856c"
     CreatePreFlightDto:
       type: object
       properties:
@@ -2939,7 +3176,60 @@ components:
           description: restriction fields of pre flight
           items:
             $ref: "#/components/schemas/CreatePreFlightRestrictionFieldDto"
-    
+    CreateSeasonDto:
+      type: object
+      required:
+        - startedIn
+        - finishedIn
+        - crop
+      properties:
+        startedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was started
+          example: 2024-05-27T22:52:44.903Z
+        finishedIn:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the season was finished
+          example: 2024-05-27T22:52:44.903Z
+        crop:
+          $ref: "#/components/schemas/CropEnum"
+    CreateProductDto:
+      type: object
+      required:
+        - alias
+      properties:
+        alias:
+          type: string
+          nullable: false
+          description: product alias
+          example: "My Product Example"
+        manufacturerName:
+          type: string
+          nullable: true
+          default: "Unknown"
+          description: name of the manufacturer of the product
+          example: "Manufacturer Example"
+    CreateFieldDto:
+      type: object
+      required:
+        - name
+        - boundaries
+      properties:
+        name:
+          type: string
+          nullable: false
+          description: field name
+          example: "Field 01"
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: object in wkt format that represents the georeferencing of the field
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
     CreatePreFlightFieldDto:
       type: object
       required:
