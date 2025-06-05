@@ -2549,6 +2549,7 @@ components:
         - totalNotAppliedArea
         - totalDistanceTraveled
         - totalAppliedArea
+        - totalCroppedNotApliedArea
         - totalAppliedOverdoseArea
         - totalCostByArea
         - totalCostByAppliedArea
@@ -2729,6 +2730,12 @@ components:
           nullable: false
           example: 98.45
         totalAppliedArea:
+          format: double
+          type: number
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCroppedNotApliedArea:
           format: double
           type: number
           minimum: 0
