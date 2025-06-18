@@ -1,6 +1,6 @@
 {
   "name": "openapi",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "OpenAPI Specification for Perfect Flight",
   "main": "index.html",
   "scripts": {
