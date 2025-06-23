@@ -1805,6 +1805,7 @@ components:
       type: string
       description: product class type
       example: fungicide
+      default: unknown
       enum:
         - unknown
         - ripener
@@ -1874,6 +1875,7 @@ components:
       type: string
       description: measurement unit
       example: l
+      default: l
       enum:
         - l
         - ha
@@ -3324,8 +3326,21 @@ components:
           default: "Unknown"
           description: name of the manufacturer of the product
           example: "Manufacturer Example"
+        productId:
+          type: string
+          format: uuid
+          nullable: true
+          description: unique identifier of the suggested product, this field must be filled in when the new product registration is associated with a suggested product.
+          example: "efae9cea-767f-4d28-a4e6-891ee7b0e998"
+        code:
+          type: integer
+          nullable: true
+          description: product code
+          example: 946749
         classType:
           $ref: "#/components/schemas/ProductClassTypeEnum"
+        measurementUnit: 
+          $ref: "#/components/schemas/MeasurementUnitEnum"
         amount:
           $ref: "#/components/schemas/AmountDto"
     CreateFieldDto:
