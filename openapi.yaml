@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.2
+  version: 1.2.3
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -1875,7 +1875,6 @@ components:
       type: string
       description: measurement unit
       example: l
-      default: l
       enum:
         - l
         - ha
@@ -3314,6 +3313,7 @@ components:
       type: object
       required:
         - alias
+        - measurementUnit
       properties:
         alias:
           type: string
