@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.1
+  version: 1.2.2
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -3335,7 +3335,7 @@ components:
         code:
           type: integer
           nullable: true
-          description: product code
+          description: custom product code
           example: 946749
         classType:
           $ref: "#/components/schemas/ProductClassTypeEnum"
