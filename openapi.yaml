@@ -3324,6 +3324,10 @@ components:
           default: "Unknown"
           description: name of the manufacturer of the product
           example: "Manufacturer Example"
+        classType:
+          $ref: "#/components/schemas/ProductClassTypeEnum"
+        amount:
+          $ref: "#/components/schemas/AmountDto"
     CreateFieldDto:
       type: object
       required:
