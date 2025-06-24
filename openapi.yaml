@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.3
+  version: 1.2.4
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -3149,6 +3149,54 @@ components:
           example: 2024-05-27T22:52:44.903Z
     FieldCreatedDto:
       type: object
+      required:
+        - id
+        - name
+        - boundaries
+        - area
+        - farm
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique field identification
+          example: b48207a5-9408-4b92-b15f-6954b225c0b6
+        name:
+          type: string
+          nullable: false
+          description: field name
+          example: Field 01
+        area:
+          type: number
+          nullable: false
+          description: |-
+            total field area in hectares.
+
+            the area calculation is performed considering the EPSG:5530 projection, which is a specific coordinate reference system for the geographic region of Brazil.
+            for more details visit [https://epsg.io/5530](https://epsg.io/5530).
+          example: 33.43
+        farm:
+          $ref: "#/components/schemas/FarmDto"
+        boundaries:
+          type: string
+          nullable: false
+          description: object in wkt format that represents the georeferencing of the field
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+          format: wkt
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the field was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the field was updated
+          example: 2024-05-27T22:55:44.903Z
     ProductCreatedDto:
       type: object
     ProductDto:
@@ -3348,6 +3396,7 @@ components:
       required:
         - name
         - boundaries
+        - farmId
       properties:
         name:
           type: string
@@ -3360,6 +3409,12 @@ components:
           nullable: false
           description: object in wkt format that represents the georeferencing of the field
           example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+        farmId:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique farm identification to which the field will be associated
+          example: "20f94ebe-361b-44e6-9729-57d744d04b27"
     CreatePreFlightFieldDto:
       type: object
       required:
