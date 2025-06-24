@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.6
+  version: 1.2.7
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -278,6 +278,14 @@ paths:
             type: string
             nullable: false
             example: My Custom Product
+        - name: code
+          in: query
+          description: custom product code
+          required: false
+          schema:
+            type: integer
+            nullable: true
+            example: 2932493
         - name: classType
           in: query
           description: product class type
