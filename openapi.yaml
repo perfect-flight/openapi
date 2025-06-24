@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.5
+  version: 1.2.6
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -3191,14 +3191,113 @@ components:
           example: 2024-05-27T22:55:44.903Z
     ProductCreatedDto:
       type: object
+      required:
+        - id
+        - alias
+        - classType
+        - measurementUnit
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique product identification
+          example: efae9cea-767f-4d28-a4e6-891ee7b0e998
+        amount:
+          $ref: "#/components/schemas/AmountDto"
+        code:
+          type: integer
+          nullable: true
+          description: custom product code
+          example: 946749
+        alias:
+          type: string
+          nullable: false
+          description: product alias
+          example: My Product Example
+        manufacturerName:
+          type: string
+          nullable: true
+          description: name of the manufacturer of the product
+          example: Manufacturer Example
+        classType:
+          $ref: "#/components/schemas/ProductClassTypeEnum"
+        measurementUnit:
+          $ref: "#/components/schemas/MeasurementUnitEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the product was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the product was updated
+          example: 2024-05-27T22:55:44.903Z
     ProductDto:
       type: object
+      required:
+        - id
+        - alias
+        - classType
+        - measurementUnit
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique product identification
+          example: efae9cea-767f-4d28-a4e6-891ee7b0e998
+        amount:
+          $ref: "#/components/schemas/AmountDto"
+        code:
+          type: integer
+          nullable: true
+          description: custom product code
+          example: 946749
+        alias:
+          type: string
+          nullable: false
+          description: product alias
+          example: Product Alias Example
+        manufacturerName:
+          type: string
+          nullable: true
+          description: name of the manufacturer of the product
+          example: Manufacturer Example
+        classType:
+          $ref: "#/components/schemas/ProductClassTypeEnum"
+        measurementUnit:
+          $ref: "#/components/schemas/MeasurementUnitEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the product was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the product was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the product was deleted
+          example: 2024-05-27T22:59:44.903Z
     SeasonCreatedDto:
       type: object
       required:
         - id
         - startedIn
         - finishedIn
+        - createdAt
         - crop
       properties:
         id:
