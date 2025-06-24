@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.7
+  version: 1.2.8
   contact:
     url: https://www.perfectflight.com.br/en/contact
     name: Perfect Flight
@@ -1008,8 +1008,60 @@ paths:
       tags:
         - farm
       responses:
-        default:
-          description: Default response for GET /farms/{farmId}/fields
+        "200":
+          description: successful field by farm search
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of fields by farm
+                minimum: 0
+                minItems: 0
+                uniqueItems: true
+                items:
+                  $ref: "#/components/schemas/FieldDto"
+        "401":
+          description: unauthorized
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "403":
+          description: forbidden
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenException"
+        "500":
+          description: internal server error
+          headers:
+            x-pf-correlation-id:
+              required: true
+              description: correlation identifier between request and response
+              schema:
+                $ref: "#/components/schemas/CorrelationHeader"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
       parameters:
