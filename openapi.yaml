@@ -2689,6 +2689,50 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the application log was deleted
           example: 2024-05-27T22:59:44.903Z
+    LayersDto:
+      type: object
+      required:
+        - id
+        - type
+        - bbox
+        - metadata
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique layer identification
+          example: fa2a8bbd-5f1d-4012-a022-12a28f676057
+        type:
+          type: string
+          example: complete
+          description: application status
+          enum:
+            - Applied
+            - AppliedFlowRateBySegment
+            - AppliedHeightBySegment
+            - AppliedOverlap
+            - AppliedPoint
+            - AppliedSegment
+            - AppliedSpeedBySegment
+            - AppliedWithoutOverlap
+            - ExternalApplied
+            - InternalApplied
+            - InternalAppliedOverlap
+            - NotApplied
+            - PathTraveled
+            - TargetField
+        bbox:
+          type: number
+          format: array
+          nullable: false
+          description: layer bbox
+          example: [10, 20, 30, 40]
+        metadata:
+          type: object
+          nullable: false
+          description: layer url
+          example: { "url": "https://www.perfectflight.com.br/" }
     ApplicationDto:
       type: object
       required:
@@ -2821,6 +2865,14 @@ components:
           description: flow rate data of application
           items:
             $ref: "#/components/schemas/FlowRateDataByGroupDto"
+        layers:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: flow rate data of application
+          items:
+            $ref: "#/components/schemas/FlowRateDataByGroupDto"
         averageSpeed:
           format: double
           type: number
@@ -2843,7 +2895,7 @@ components:
           uniqueItems: true
           description: height data of application
           items:
-            $ref: '#/components/schemas/HeightDataByGroupDto'
+            $ref: "#/components/schemas/HeightDataByGroupDto"
         totalInternalAppliedOverlapArea:
           format: double
           type: number
@@ -3055,7 +3107,7 @@ components:
         area:
           type: number
           nullable: false
-          description: total field area in hectares.            
+          description: total field area in hectares.
           example: 33.43
         boundaries:
           type: string
@@ -3538,7 +3590,7 @@ components:
           example: 946749
         classType:
           $ref: "#/components/schemas/ProductClassTypeEnum"
-        measurementUnit: 
+        measurementUnit:
           $ref: "#/components/schemas/MeasurementUnitEnum"
         amount:
           $ref: "#/components/schemas/AmountDto"
