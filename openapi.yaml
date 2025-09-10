@@ -2705,8 +2705,8 @@ components:
           example: fa2a8bbd-5f1d-4012-a022-12a28f676057
         type:
           type: string
-          example: complete
-          description: application status
+          example: Applied
+          description: application layers enum
           enum:
             - Applied
             - AppliedFlowRateBySegment
@@ -2872,7 +2872,7 @@ components:
           uniqueItems: true
           description: flow rate data of application
           items:
-            $ref: "#/components/schemas/FlowRateDataByGroupDto"
+            $ref: "#/components/schemas/LayersDto"
         averageSpeed:
           format: double
           type: number
