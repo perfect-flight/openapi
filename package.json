@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/perfect-flight/openapi#readme",
   "devDependencies": {
-    "@redocly/cli": "^1.34.0"
+    "@redocly/cli": "^2.11.1"
   }
 }
