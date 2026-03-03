@@ -2020,6 +2020,9 @@ components:
         - dynanav
         - trimble
         - verion
+        - dji
+        - pyka
+        - xag
     ApplicationLogStatusEnum:
       type: string
       nullable: false
