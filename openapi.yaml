@@ -17,7 +17,7 @@ tags:
   - name: application
   - name: product
   - name: season
-  - name: aircraft
+  - name: vehicle
   - name: pilot
   - name: suggested products
   - name: pre flight
@@ -392,7 +392,7 @@ paths:
         - pilot
       security:
         - auth: []
-  /aircrafts:
+  /vehicles:
     parameters:
       - name: x-pf-correlation-id
         in: header
@@ -400,11 +400,11 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     get:
-      description: search all aircrafts
-      summary: search all aircrafts
+      description: search all vehicles
+      summary: search all vehicles
       responses:
         "200":
-          description: successful aircraft search
+          description: successful vehicle search
           headers:
             x-pf-correlation-id:
               required: true
@@ -415,12 +415,12 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of aircrafts
+                description: list of vehicles
                 minimum: 0
                 minItems: 0
                 uniqueItems: true
                 items:
-                  $ref: "#/components/schemas/AircraftDto"
+                  $ref: "#/components/schemas/VehicleDto"
         "401":
           description: unauthorized
           headers:
@@ -460,7 +460,7 @@ paths:
       parameters:
         - name: withDeleted
           in: query
-          description: include deleted aircrafts
+          description: include deleted vehicles
           required: false
           schema:
             $ref: "#/components/schemas/WithDeletedQueryParameter"
@@ -472,12 +472,12 @@ paths:
             $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
-          description: number of aircrafts per page
+          description: number of vehicles per page
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
       tags:
-        - aircraft
+        - vehicle
       security:
         - auth: []
   /seasons:
@@ -2042,6 +2042,23 @@ components:
       enum:
         - application_date
         - analysis_date
+    VehicleTypeEnum:
+      type: string
+      description: vehicle type
+      example: drone
+      enum:
+        - drone
+        - aircraft
+        - tractor
+    PulverizerTypeEnum:
+      type: string
+      description: pulverizer type
+      example: atomizer
+      enum:
+        - atomizer
+        - solid_disperser
+        - hydraulic_nozzle
+        - rotating_disc
     SeasonDto:
       type: object
       required:
@@ -2124,7 +2141,7 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the service order was deleted
           example: 2024-05-27T22:59:44.903Z
-    AircraftManufacturerDto:
+    VehicleManufacturerDto:
       type: object
       required:
         - id
@@ -2135,32 +2152,32 @@ components:
           type: string
           format: uuid
           nullable: false
-          description: unique aircraft manufacturer identification
+          description: unique vehicle manufacturer identification
           example: "ca824435-6ecc-4fcc-9ca1-53801a58790f"
         name:
           type: string
           nullable: false
-          description: aircraft manufacturer
+          description: vehicle manufacturer
           example: "Air Tractor"
         createdAt:
           type: string
           format: date-time
           nullable: false
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was created
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle manufacturer was created
           example: "2024-05-27T22:52:44.903Z"
         updatedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was updated
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle manufacturer was updated
           example: "2024-05-27T22:55:44.903Z"
         deletedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft manufacturer was deleted
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle manufacturer was deleted
           example: "2024-05-27T22:59:44.903Z"
-    AircraftModelDto:
+    VehicleModelDto:
       type: object
       required:
         - id
@@ -2172,32 +2189,32 @@ components:
           type: string
           format: uuid
           nullable: false
-          description: unique aircraft model identification
+          description: unique vehicle model identification
           example: 07d9a0aa-eb71-451d-af05-de2a06d3d888
         name:
           type: string
           nullable: false
-          description: aircraft model
+          description: vehicle model
           example: AT-401
         manufacturer:
-          $ref: "#/components/schemas/AircraftManufacturerDto"
+          $ref: "#/components/schemas/VehicleManufacturerDto"
         createdAt:
           type: string
           format: date-time
           nullable: false
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was created
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle model was created
           example: 2024-05-27T22:52:44.903Z
         updatedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was updated
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle model was updated
           example: 2024-05-27T22:55:44.903Z
         deletedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft model was deleted
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle model was deleted
           example: 2024-05-27T22:59:44.903Z
     AerialCompanyDto:
       type: object
@@ -2281,43 +2298,49 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the pilot was deleted
           example: 2024-05-27T22:59:44.903Z
-    AircraftDto:
+    VehicleDto:
       type: object
       required:
         - id
-        - enrollmentId
+        - name
         - model
+        - type
         - aerialCompany
         - createdAt
       properties:
         id:
-          $ref: "#/components/schemas/AircraftId"
-        enrollmentId:
+          $ref: "#/components/schemas/VehicleId"
+        name:
           type: string
           nullable: false
-          description: enrollment aircraft identification
+          description: name vehicle identification
           example: PT-FFG
         model:
-          $ref: "#/components/schemas/AircraftModelDto"
+          $ref: "#/components/schemas/VehicleModelDto"
+        type:
+          $ref: "#/components/schemas/VehicleTypeEnum"
         aerialCompany:
           $ref: "#/components/schemas/AerialCompanyDto"
+        pulverizerType:
+          $ref: "#/components/schemas/PulverizerTypeEnum"
+          nullable: true
         createdAt:
           type: string
           format: date-time
           nullable: false
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft was created
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle was created
           example: 2024-05-27T22:52:44.903Z
         updatedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft was updated
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle was updated
           example: 2024-05-27T22:55:44.903Z
         deletedAt:
           type: string
           format: date-time
           nullable: true
-          description: timestamp in RFC 3339 format (UTC) in which the aircraft was deleted
+          description: timestamp in RFC 3339 format (UTC) in which the vehicle was deleted
           example: 2024-05-27T22:59:44.903Z
     ApplicationFieldDto:
       type: object
@@ -2582,7 +2605,7 @@ components:
         - pilot
         - startedIn
         - finishedIn
-        - aircraft
+        - vehicle
         - createdAt
       properties:
         id:
@@ -2595,8 +2618,8 @@ components:
           $ref: "#/components/schemas/ApplicationScheduleStatusEnum"
         pilot:
           $ref: "#/components/schemas/PilotDto"
-        aircraft:
-          $ref: "#/components/schemas/AircraftDto"
+        vehicle:
+          $ref: "#/components/schemas/VehicleDto"
         startedIn:
           type: string
           format: date-time
@@ -3461,11 +3484,11 @@ components:
       nullable: false
       description: unique restriction field identification
       example: "d902bd61-6b7f-451e-970c-4576d1fbb238"
-    AircraftId:
+    VehicleId:
       type: string
       format: uuid
       nullable: false
-      description: unique aircraft identification
+      description: unique vehicle identification
       example: "54e5221c-8a04-4f86-a558-d85b9210f0c9"
     TractorId:
       type: string
@@ -3506,13 +3529,13 @@ components:
           description: pilots of pre flight
           items:
             $ref: "#/components/schemas/PilotId"
-        preFlightAircraft:
+        preFlightVehicle:
           type: array
           minItems: 0
           uniqueItems: true
-          description: aircrafts of pre flight
+          description: vehicles of pre flight
           items:
-            $ref: "#/components/schemas/AircraftId"
+            $ref: "#/components/schemas/VehicleId"
         preFlightTractor:
           type: array
           minItems: 0
@@ -3665,7 +3688,7 @@ components:
           description: |-
             distance in meters from the restriction field to the application field.
 
-            this distance is used to generate a warning when the aircraft is within this distance from the restriction field.
+            this distance is used to generate a warning when the vehicle is within this distance from the restriction field.
     PreFlightCreatedDto:
       type: object
       required:
