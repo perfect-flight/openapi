@@ -2023,6 +2023,7 @@ components:
         - dji
         - pyka
         - xag
+        - eavision
     ApplicationLogStatusEnum:
       type: string
       nullable: false
