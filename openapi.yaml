@@ -1,11 +1,14 @@
 openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
-  version: 1.2.8
+  version: 1.0.0
   contact:
-    url: https://www.perfectflight.com.br/en/contact
+    url: https://www.perfectflight.com.br/#contato
     name: Perfect Flight
     email: developer@perfectflightapp.com
+  license:
+    name: Proprietary — Perfect Flight
+    url: https://www.perfectflight.com.br/
 servers:
   - url: https://api.sandbox.perfectflight.com.br/v1
     description: "Sandbox Server API"
@@ -13,14 +16,23 @@ servers:
     description: "Production Server API"
 tags:
   - name: farm
+    description: Farms and their hierarchy
   - name: field
+    description: Fields belonging to farms
   - name: application
+    description: Product application records and their results
   - name: product
+    description: Products available for application
   - name: season
+    description: Crop seasons
   - name: vehicle
+    description: Vehicles used in applications
   - name: pilot
+    description: Pilots operating the vehicles
   - name: suggested products
+    description: Suggested products catalog
   - name: pre flight
+    description: Pre-flight service orders
 paths:
   /suggested-products:
     parameters:
@@ -30,6 +42,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     get:
+      operationId: searchSuggestedProducts
       description: search all suggested products
       summary: search all suggested products
       responses:
@@ -132,6 +145,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     post:
+      operationId: createProduct
       description: create a new product
       summary: create a new product
       tags:
@@ -194,6 +208,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerErrorException"
     get:
+      operationId: searchProducts
       description: search all products
       summary: search all products
       tags:
@@ -312,6 +327,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     get:
+      operationId: searchPilots
       description: search all pilots
       summary: search all pilots
       responses:
@@ -400,6 +416,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     get:
+      operationId: searchVehicles
       description: search all vehicles
       summary: search all vehicles
       responses:
@@ -488,6 +505,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     post:
+      operationId: createSeason
       description: create a new season
       summary: create a new season
       tags:
@@ -550,6 +568,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerErrorException"
     get:
+      operationId: searchSeasons
       description: search all seasons
       summary: search all seasons
       responses:
@@ -632,6 +651,7 @@ paths:
         - auth: []
   /seasons/{seasonId}:
     get:
+      operationId: getSeason
       description: search season by id
       summary: search season by id
       tags:
@@ -724,6 +744,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     post:
+      operationId: createFarm
       description: create a new farm
       summary: create a new farm
       tags:
@@ -810,6 +831,7 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateFarmDto"
     get:
+      operationId: searchFarms
       description: search all farms
       summary: search all farms
       tags:
@@ -917,6 +939,7 @@ paths:
             $ref: "#/components/schemas/PageSizeQueryParameter"
   /farms/{farmId}:
     get:
+      operationId: getFarm
       description: search farm by id
       summary: search farm by id
       tags:
@@ -1003,6 +1026,7 @@ paths:
           $ref: "#/components/schemas/CorrelationHeader"
   /farms/{farmId}/fields:
     get:
+      operationId: searchFarmFields
       description: search all fields by farm id
       summary: search all fields by farm id
       tags:
@@ -1093,6 +1117,7 @@ paths:
           format: uuid
   /fields:
     get:
+      operationId: searchFields
       description: search all fields
       summary: search all fields
       tags:
@@ -1174,6 +1199,7 @@ paths:
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
     post:
+      operationId: createField
       description: create a new field
       summary: create a new field
       tags:
@@ -1243,6 +1269,7 @@ paths:
           $ref: "#/components/schemas/CorrelationHeader"
   /fields/{fieldId}:
     get:
+      operationId: getField
       description: search field by id
       summary: search field by id
       tags:
@@ -1338,6 +1365,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     get:
+      operationId: searchApplications
       description: search all applications
       summary: search all applications
       tags:
@@ -1495,7 +1523,7 @@ paths:
             type: string
             format: date-time
             nullable: false
-            example: 2024-06-31T22:52:44.903Z
+            example: 2024-06-30T22:52:44.903Z
   /applications/{applicationId}:
     parameters:
       - name: x-pf-correlation-id
@@ -1512,6 +1540,7 @@ paths:
           type: string
           format: uuid
     get:
+      operationId: getApplication
       description: search application by id
       summary: search application by id
       tags:
@@ -1587,6 +1616,7 @@ paths:
         schema:
           $ref: "#/components/schemas/CorrelationHeader"
     post:
+      operationId: createPreFlight
       description: create a new pre flight
       summary: create a new pre flight
       tags:
@@ -2750,8 +2780,9 @@ components:
             - PathTraveled
             - TargetField
         bbox:
-          type: number
-          format: array
+          type: array
+          items:
+            type: number
           nullable: false
           description: layer bbox
           example: [10, 20, 30, 40]
@@ -3708,3 +3739,4 @@ components:
       flows:
         clientCredentials:
           tokenUrl: "https://auth.sandbox.perfectflight.com.br/oauth2/token"
+          scopes: {}
