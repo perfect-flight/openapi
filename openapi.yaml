@@ -3734,7 +3734,93 @@ components:
           example: "OS-1234567899"
   securitySchemes:
     auth:
-      description: "Authorization Server"
+      description: |
+        The API uses the **OAuth 2.0 Client Credentials** flow (machine-to-machine).
+        You exchange a `client_id` / `client_secret` pair for a short-lived access
+        token and send that token on every request.
+
+        ![Client credentials authentication flow](assets/auth-sequence.svg)
+
+        ### 1. Get your credentials
+
+        Your `client_id` and `client_secret` are issued during onboarding. If you
+        don't have them yet, contact us at
+        [developer@perfectflightapp.com](mailto:developer@perfectflightapp.com).
+        Keep the `client_secret` private — never expose it in a browser, mobile app,
+        or public repository.
+
+        ### 2. Request an access token
+
+        Send a `POST` to the token endpoint with a form-urlencoded body containing
+        `grant_type=client_credentials` plus your `client_id` and `client_secret`:
+
+        ```bash
+        curl --request POST \
+          --url https://auth.sandbox.perfectflight.com.br/oauth2/token \
+          --header "Content-Type: application/x-www-form-urlencoded" \
+          --data "grant_type=client_credentials" \
+          --data "client_id=<client_id>" \
+          --data "client_secret=<client_secret>"
+        ```
+
+        Successful response:
+
+        ```json
+        {
+          "access_token": "eyJraWQiOiJ...",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+        ```
+
+        ### Scopes
+
+        Each token carries a set of **scopes** that decide which endpoints it can
+        reach. The scopes available to your client are enabled in advance by the
+        Perfect Flight team — you can only request scopes already granted to your
+        client.
+
+        - **Omit `scope`** (as above) and the token is issued with **all** scopes
+          enabled for your client.
+        - **Request a subset** by adding a `scope` parameter, with multiple scopes
+          **separated by spaces**:
+
+          ```bash
+          --data "scope=https://api.sandbox.perfectflight.com.br/read_customer_farm https://api.sandbox.perfectflight.com.br/read_customer_field"
+          ```
+
+        Requesting a scope that hasn't been enabled for your client returns
+        `400 Bad Request` with `{"error": "invalid_scope"}`.
+
+        ### 3. Call the API
+
+        Send the token in the `Authorization` header on every request:
+
+        ```bash
+        curl --url https://api.sandbox.perfectflight.com.br/v1/farms \
+          --header "Authorization: Bearer eyJraWQiOiJ..."
+        ```
+
+        ### Token lifetime
+
+        Tokens expire after `expires_in` seconds (typically 1 hour). Cache the token
+        and reuse it until it's close to expiring, then request a new one — don't
+        fetch a fresh token per request. A request with an expired or missing token
+        returns `401 Unauthorized`.
+
+        ### Credential rotation
+
+        Keeping your credentials secure is your responsibility — treat the
+        `client_secret` like a password and never expose it. We recommend adopting a
+        regular rotation policy: ask the Perfect Flight team to **issue new
+        credentials and revoke the old ones** as needed — on a schedule, or
+        immediately if a secret may have been exposed. Credentials are generated and
+        revoked by our team on request at
+        [developer@perfectflightapp.com](mailto:developer@perfectflightapp.com).
+
+        > **Production** uses the same flow against
+        > `https://auth.perfectflight.com.br/oauth2/token` and
+        > `https://api.perfectflight.com.br/v1`.
       type: oauth2
       flows:
         clientCredentials:

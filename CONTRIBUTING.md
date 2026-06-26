@@ -23,6 +23,19 @@ build (Redoc) e **nunca deve ser editado à mão**.
    [docs.perfectflight.com.br](https://docs.perfectflight.com.br) e a
    tag/release é criada automaticamente.
 
+## Diagramas
+
+Os diagramas da doc têm a fonte em [`diagrams/`](diagrams/) (Mermaid, `.mmd`) e a
+imagem gerada em [`assets/`](assets/) (`.svg`, referenciada no `openapi.yaml`).
+Edite o `.mmd`, **nunca** o `.svg`, e regenere:
+
+```sh
+npm run diagrams
+```
+
+Commite o `.mmd` e o `.svg` atualizados no mesmo PR. (`assets/` guarda só o que é
+servido junto ao `index.html`; a fonte fica fora dele.)
+
 ## Validação
 
 Antes de buildar, rode o lint:

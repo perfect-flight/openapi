@@ -9,6 +9,13 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 
 ## [Unreleased]
 
+### Added
+- Guia de autenticação: passo a passo para gerar o token de acesso (OAuth2
+  _client credentials_), uso de escopos, ciclo de vida do token e rotação de
+  credenciais — com diagrama de sequência do fluxo.
+
+## [0.0.1] - 2026-06-26
+
 ### Changed
 - Todas as operações agora têm `operationId` e todas as tags têm descrição.
 - `info` passou a declarar `license`.

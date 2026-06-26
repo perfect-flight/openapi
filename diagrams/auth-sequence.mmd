@@ -1,0 +1,11 @@
+%% Source for ../assets/auth-sequence.svg (rendered in the API docs auth section).
+%% Regenerate after editing:  npm run diagrams
+sequenceDiagram
+    autonumber
+    participant App as Your app
+    participant Auth as Auth Server
+    participant API as Perfect Flight API
+    App->>Auth: POST /oauth2/token (client_id + client_secret)
+    Auth-->>App: 200 { access_token, expires_in, token_type }
+    App->>API: GET /v1/... · Authorization: Bearer <access_token>
+    API-->>App: 200 + requested resource

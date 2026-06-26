@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "npx @redocly/cli lint openapi.yaml",
     "build": "npx @redocly/cli build-docs openapi.yaml -o index.html",
+    "diagrams": "mmdc -i diagrams/auth-sequence.mmd -o assets/auth-sequence.svg -b transparent -p puppeteer.config.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/perfect-flight/openapi#readme",
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.15.0",
     "@redocly/cli": "^2.35.1"
   }
 }
