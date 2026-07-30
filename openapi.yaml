@@ -3648,8 +3648,6 @@ components:
           nullable: true
           description: custom product code
           example: 946749
-        classType:
-          $ref: "#/components/schemas/ProductClassTypeEnum"
         measurementUnit:
           $ref: "#/components/schemas/MeasurementUnitEnum"
         amount:
