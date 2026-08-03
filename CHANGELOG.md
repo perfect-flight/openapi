@@ -14,6 +14,10 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   _client credentials_), uso de escopos, ciclo de vida do token e rotação de
   credenciais — com diagrama de sequência do fluxo.
 
+### Fixed
+- Busca de veículos (`GET /vehicles`) corrigida e agora aceita filtros por
+  `name`, `type` e `serialNumber`.
+
 ## [0.0.1] - 2026-06-26
 
 ### Changed

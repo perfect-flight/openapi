@@ -475,24 +475,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerErrorException"
       parameters:
-        - name: withDeleted
+        - name: name
           in: query
-          description: include deleted vehicles
+          description: filter by vehicle name
           required: false
           schema:
-            $ref: "#/components/schemas/WithDeletedQueryParameter"
-        - name: page
+            type: string
+        - name: type
           in: query
-          description: current page number
+          description: filter by vehicle type
           required: false
           schema:
-            $ref: "#/components/schemas/PageQueryParameter"
-        - name: pageSize
+            $ref: "#/components/schemas/VehicleTypeEnum"
+        - name: serialNumber
           in: query
-          description: number of vehicles per page
+          description: filter by vehicle serial number
           required: false
           schema:
-            $ref: "#/components/schemas/PageSizeQueryParameter"
+            type: string
       tags:
         - vehicle
       security:
@@ -2355,6 +2355,11 @@ components:
         pulverizerType:
           $ref: "#/components/schemas/PulverizerTypeEnum"
           nullable: true
+        serialNumber:
+          type: string
+          nullable: true
+          description: vehicle serial number, assigned automatically for aircraft
+          example: PT-FFG123456
         createdAt:
           type: string
           format: date-time
