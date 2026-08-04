@@ -17,6 +17,8 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 ### Fixed
 - Busca de veículos (`GET /vehicles`) corrigida e agora aceita filtros por
   `name`, `type` e `serialNumber`.
+- Enum `serviceType` de produto (`GET /suggested-products`) estava sem o valor
+  `biological_application`, já presente na API.
 
 ## [0.0.1] - 2026-06-26
 
