@@ -1959,6 +1959,7 @@ components:
         - pesticide_application
         - adjuvant_application
         - fertilizer_application
+        - biological_application
         - seeding
         - unknown
     MeasurementUnitEnum:
