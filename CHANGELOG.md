@@ -10,6 +10,19 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 ## [Unreleased]
 
 ### Added
+- Documentada a compressão automática de resposta (gzip/Brotli): basta o
+  cliente enviar `Accept-Encoding`, o que a maioria dos clientes HTTP já faz
+  por padrão.
+
+### Fixed
+- `FieldDto.boundaries` estava documentado como sempre presente; corrigido
+  para opcional, já que `GET /fields` pode omiti-lo (`withBoundaries=false`).
+  A descrição de `boundaries` em `FieldDto` e `FarmDto` agora deixa explícito
+  esse comportamento.
+
+## [0.0.8] - 2026-08-05
+
+### Added
 - `GET /fields` e `GET /farms` agora documentam o parâmetro `withBoundaries`
   (default `true`): quando `false`, omite/deixa de agregar o campo
   `boundaries` de cada item, deixando listagens grandes mais leves.
