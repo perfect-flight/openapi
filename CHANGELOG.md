@@ -10,8 +10,8 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 ## [Unreleased]
 
 ### Added
-- `FieldDto` agora documenta o objeto `farm` (dados da fazenda do talhão),
-  já retornado por `GET /fields/{fieldId}`, `GET /fields` e
+- `FieldDto` agora documenta o objeto `farm` (`id` e `name` da fazenda do
+  talhão), já retornado por `GET /fields/{fieldId}`, `GET /fields` e
   `GET /farms/{farmId}/fields`.
 - `GET /fields/{fieldId}` agora documenta o parâmetro `withDeleted`, já
   aceito pela API.

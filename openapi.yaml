@@ -3188,7 +3188,7 @@ components:
           example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
           format: wkt
         farm:
-          $ref: "#/components/schemas/FarmDto"
+          $ref: "#/components/schemas/FarmSummaryDto"
         createdAt:
           type: string
           format: date-time
@@ -3207,6 +3207,23 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the field was deleted
           example: 2024-05-27T22:59:44.903Z
+    FarmSummaryDto:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique farm identification
+          example: 20f94ebe-361b-44e6-9729-57d744d04b27
+        name:
+          type: string
+          nullable: false
+          description: farm name
+          example: My Farm
     FarmDto:
       type: object
       required:
