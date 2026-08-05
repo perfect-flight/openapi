@@ -1343,6 +1343,13 @@ paths:
                 $ref: "#/components/schemas/InternalServerErrorException"
       security:
         - auth: []
+      parameters:
+        - name: withDeleted
+          in: query
+          description: include deleted fields
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithDeletedQueryParameter"
     parameters:
       - name: fieldId
         in: path
@@ -3155,6 +3162,7 @@ components:
         - name
         - boundaries
         - area
+        - farm
         - createdAt
       properties:
         id:
@@ -3179,6 +3187,8 @@ components:
           description: object in wkt format that represents the georeferencing of the field
           example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
           format: wkt
+        farm:
+          $ref: "#/components/schemas/FarmDto"
         createdAt:
           type: string
           format: date-time
