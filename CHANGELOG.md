@@ -10,15 +10,35 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 ## [Unreleased]
 
 ### Added
-- Guia de autenticação: passo a passo para gerar o token de acesso (OAuth2
-  _client credentials_), uso de escopos, ciclo de vida do token e rotação de
-  credenciais — com diagrama de sequência do fluxo.
+- `FieldDto` agora documenta o objeto `farm` (`id` e `name` da fazenda do
+  talhão), já retornado por `GET /fields/{fieldId}`, `GET /fields` e
+  `GET /farms/{farmId}/fields`.
+- `GET /fields/{fieldId}` agora documenta o parâmetro `withDeleted`, já
+  aceito pela API.
+
+### Fixed
+- `GET /fields` e `GET /farms/{farmId}/fields` estavam documentados com
+  `withDeleted`, `page` e `pageSize`, mas a API ignorava os três parâmetros;
+  agora funcionam.
+
+## [0.0.6] - 2026-08-04
+
+### Fixed
+- Enum `serviceType` de produto (`GET /suggested-products`) estava sem o valor
+  `biological_application`, já presente na API.
+
+## [0.0.5] - 2026-08-03
 
 ### Fixed
 - Busca de veículos (`GET /vehicles`) corrigida e agora aceita filtros por
   `name`, `type` e `serialNumber`.
-- Enum `serviceType` de produto (`GET /suggested-products`) estava sem o valor
-  `biological_application`, já presente na API.
+
+## [0.0.2] - 2026-06-26
+
+### Added
+- Guia de autenticação: passo a passo para gerar o token de acesso (OAuth2
+  _client credentials_), uso de escopos, ciclo de vida do token e rotação de
+  credenciais — com diagrama de sequência do fluxo.
 
 ## [0.0.1] - 2026-06-26
 
