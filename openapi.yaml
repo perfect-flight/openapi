@@ -2,6 +2,16 @@ openapi: 3.0.4
 info:
   title: Perfect Flight - API Reference
   version: 1.0.0
+  description: |
+    ### Response compression
+
+    Responses are compressed automatically (gzip or Brotli) whenever the
+    client sends the `Accept-Encoding` header — virtually every HTTP client
+    does this by default, so no extra configuration is usually needed on
+    your side. This matters most on large list endpoints (e.g. `GET /fields`,
+    `GET /farms`), which can return heavy geometry data in `boundaries`; see
+    the `withBoundaries` query parameter on those endpoints for a way to
+    reduce the payload further by leaving that field out.
   contact:
     url: https://www.perfectflight.com.br/#contato
     name: Perfect Flight
@@ -1875,7 +1885,7 @@ components:
     WithBoundariesQueryParameter:
       type: boolean
       default: true
-      description: when false, the boundaries (geometry) field is omitted from the response, making large list queries lighter
+      description: when false, the boundaries (geometry) field is not computed, making large list queries lighter — see each endpoint's description for the exact effect on the response
       example: false
     CropEnum:
       type: string
@@ -3177,7 +3187,6 @@ components:
       required:
         - id
         - name
-        - boundaries
         - area
         - farm
         - createdAt
@@ -3201,7 +3210,7 @@ components:
         boundaries:
           type: string
           nullable: false
-          description: object in wkt format that represents the georeferencing of the field
+          description: object in wkt format that represents the georeferencing of the field. Absent from GET /fields list responses when withBoundaries=false was passed.
           example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
           format: wkt
         farm:
@@ -3284,7 +3293,7 @@ components:
           type: string
           nullable: false
           default: "POLYGON EMPTY"
-          description: object in wkt format that represents the georeference of the farm according to the active fields associated with it
+          description: object in wkt format that represents the georeference of the farm according to the active fields associated with it. Also "POLYGON EMPTY" when withBoundaries=false was passed to GET /farms, skipping this aggregation.
           example: "MULTIPOLYGON (((-63.7279364 -8.8349494,-63.7264692 -8.8379071,-63.7252954 -8.8373272,-63.7272909 -8.8346015,-63.7279364 -8.8349494)),((-63.7265866 -8.8333836,-63.7268213 -8.8324557,-63.7245324 -8.8322238,-63.7246498 -8.8331516,-63.7265866 -8.8333836)))"
           format: wkt
         createdAt:

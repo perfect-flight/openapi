@@ -59,7 +59,8 @@ Ao adicionar ou editar endpoints, siga os padrões já existentes:
 - Schemas de exceção seguem o formato `{ error, message }`.
 - Reuse via `$ref: "#/components/schemas/..."`. Componentes comuns já existem:
   `CorrelationHeader`, `PageQueryParameter`, `PageSizeQueryParameter`,
-  `WithDeletedQueryParameter`. Não duplique — reaproveite.
+  `WithDeletedQueryParameter`, `WithBoundariesQueryParameter`. Não duplique —
+  reaproveite.
 - Auth é OAuth2 `clientCredentials` (M2M). Servers: sandbox e produção sob `/v1`.
 
 ## Versão e release
