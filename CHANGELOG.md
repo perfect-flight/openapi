@@ -10,6 +10,13 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 ## [Unreleased]
 
 ### Added
+- `GET /fields` e `GET /farms` agora documentam o parâmetro `withBoundaries`
+  (default `true`): quando `false`, omite/deixa de agregar o campo
+  `boundaries` de cada item, deixando listagens grandes mais leves.
+
+## [0.0.7] - 2026-08-04
+
+### Added
 - `FieldDto` agora documenta o objeto `farm` (`id` e `name` da fazenda do
   talhão), já retornado por `GET /fields/{fieldId}`, `GET /fields` e
   `GET /farms/{farmId}/fields`.

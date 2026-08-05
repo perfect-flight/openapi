@@ -937,6 +937,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
+        - name: withBoundaries
+          in: query
+          description: when false, skips aggregating the boundaries field of each farm (returned as an empty geometry), reducing query size for large lists
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithBoundariesQueryParameter"
   /farms/{farmId}:
     get:
       operationId: getFarm
@@ -1198,6 +1204,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
+        - name: withBoundaries
+          in: query
+          description: when false, omits the boundaries field of each field, reducing query and response size for large lists
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithBoundariesQueryParameter"
     post:
       operationId: createField
       description: create a new field
@@ -1860,6 +1872,11 @@ components:
       # TODO description:
       example: 20
       default: 10
+    WithBoundariesQueryParameter:
+      type: boolean
+      default: true
+      description: when false, the boundaries (geometry) field is omitted from the response, making large list queries lighter
+      example: false
     CropEnum:
       type: string
       description: crop type
