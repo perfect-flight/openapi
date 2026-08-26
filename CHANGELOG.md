@@ -13,12 +13,19 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - Documentada a compressão automática de resposta (gzip/Brotli): basta o
   cliente enviar `Accept-Encoding`, o que a maioria dos clientes HTTP já faz
   por padrão.
+- `GET /applications` agora documenta os parâmetros `order` (direção de
+  ordenação por `createdAt`, default `asc`) e `withBoundaries` (default
+  `true`; quando `false`, omite o campo `boundaries` de cada item de
+  `fields`, deixando listagens grandes mais leves).
 
 ### Fixed
 - `FieldDto.boundaries` estava documentado como sempre presente; corrigido
   para opcional, já que `GET /fields` pode omiti-lo (`withBoundaries=false`).
   A descrição de `boundaries` em `FieldDto` e `FarmDto` agora deixa explícito
   esse comportamento.
+- `ApplicationFieldDto.boundaries` estava documentado como sempre presente;
+  corrigido para opcional, já que `GET /applications` pode omiti-lo
+  (`withBoundaries=false`).
 
 ## [0.0.8] - 2026-08-05
 
