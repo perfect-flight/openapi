@@ -9,9 +9,10 @@ info:
     client sends the `Accept-Encoding` header — virtually every HTTP client
     does this by default, so no extra configuration is usually needed on
     your side. This matters most on large list endpoints (e.g. `GET /fields`,
-    `GET /farms`), which can return heavy geometry data in `boundaries`; see
-    the `withBoundaries` query parameter on those endpoints for a way to
-    reduce the payload further by leaving that field out.
+    `GET /farms`, `GET /applications`), which can return heavy geometry data
+    in `boundaries`; see the `withBoundaries` query parameter on those
+    endpoints for a way to reduce the payload further by leaving that field
+    out.
   contact:
     url: https://www.perfectflight.com.br/#contato
     name: Perfect Flight
@@ -1493,6 +1494,18 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
+        - name: order
+          in: query
+          description: sort direction for the results, always ordered by createdAt
+          required: false
+          schema:
+            $ref: "#/components/schemas/SortOrderEnum"
+        - name: withBoundaries
+          in: query
+          description: when false, omits the boundaries field of each application field, reducing response size for large lists
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithBoundariesQueryParameter"
         - name: crop
           in: query
           description: season crop
@@ -2108,6 +2121,14 @@ components:
       enum:
         - application_date
         - analysis_date
+    SortOrderEnum:
+      type: string
+      description: sort direction
+      example: asc
+      default: asc
+      enum:
+        - asc
+        - desc
     VehicleTypeEnum:
       type: string
       description: vehicle type
@@ -2417,7 +2438,6 @@ components:
       type: object
       required:
         - id
-        - boundaries
         - area
         - field
         - totalTargetFieldArea
@@ -2439,7 +2459,7 @@ components:
           type: string
           format: wkt
           nullable: false
-          description: appplication field boundaries
+          description: application field boundaries. Absent from GET /applications list responses when withBoundaries=false was passed.
           example: "POLYGON ((-64.8000009 -6.7046461,-55.2000008 -10.0284011,-63.3600009 -15.6419963,-64.8000009 -6.7046461))"
         area:
           type: number
