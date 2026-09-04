@@ -17,6 +17,29 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   ordenação por `createdAt`, default `asc`) e `withBoundaries` (default
   `true`; quando `false`, omite o campo `boundaries` de cada item de
   `fields`, deixando listagens grandes mais leves).
+- `ApplicationDto` (`GET /applications`, `GET /applications/{applicationId}`)
+  agora documenta diversos campos já retornados pela API e que faltavam na
+  doc, entre eles `processedAt` e `lastReprocessedAt`, os campos de
+  inspeção (`inspectionFlags`, `inspectionStatus`, `inspectionReason`,
+  `inspectionObservation`, `notChargeable`, `deletedObservation`), `farms`,
+  `restrictionFields`, `applicationTrack`, `runway`,
+  `applicationOperationalServices`, `speedDataByGroup`, `images` e as
+  variações de velocidade planejada/realizada (`plannedAverageSpeed`,
+  `flowRangeVariation`, `heightRangeVariation`). Os objetos aninhados
+  (`schedules`, `products`, `logs`, `serviceOrder`) também ganharam vários
+  campos que a API já retorna e não estavam documentados.
+- `VehicleDto` (`GET /vehicles`) agora documenta `idealHeight`,
+  `idealSpeed`, `idealSwathWidth`, e os campos de integração com a nuvem do
+  fabricante DGPS (`externalVehicleId`, `connector`).
+- `VehicleModelDto` agora documenta o campo `type`.
+- `FarmDto` (`GET /farms`) agora documenta os campos de hierarquia
+  (`hasChildren`, `childrenAmount`, `parentFarmId`, `farmNameHierarchy`).
+- `ProductDto`/`ProductCreatedDto` (`product`) e `SuggestedProductDto`
+  (`suggested products`) agora documentam `formulation`,
+  `toxicityCategory` e `colorBand`; `ProductDto`/`ProductCreatedDto` também
+  passam a documentar `serviceType`.
+- `AerialCompanyDto` (usado em `pilot` e `vehicle`) agora documenta `state`,
+  `city` e `mapaRegistration`.
 
 ### Fixed
 - `FieldDto.boundaries` estava documentado como sempre presente; corrigido
@@ -26,6 +49,19 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - `ApplicationFieldDto.boundaries` estava documentado como sempre presente;
   corrigido para opcional, já que `GET /applications` pode omiti-lo
   (`withBoundaries=false`).
+- `GET /pilots` estava documentado como retornando um array de pilotos
+  direto; corrigido para o formato real, uma tupla `[pilotos, total]`.
+- O `type` de cada item de `layers` (`ApplicationDto.layers`) estava
+  documentado com um conjunto de valores e uma convenção de nomenclatura
+  (`AppliedOverlap`) diferentes dos realmente usados pela API
+  (`APPLIED_OVERLAP`), e faltavam vários valores possíveis; corrigido para
+  os 27 valores reais. `layers` também ganhou os campos `length`,
+  `createdAt` e `updatedAt`, que já eram retornados.
+- A resposta de `POST /fields` estava documentada com um `farmId` plano;
+  corrigida para o formato real, que retorna `farm.id` (e `farm.customer.id`)
+  aninhados.
+- A resposta de `POST /seasons` agora documenta o campo `customer` aninhado,
+  já retornado pela API e ausente da doc anterior.
 
 ## [0.0.8] - 2026-08-05
 
