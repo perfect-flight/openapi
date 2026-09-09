@@ -239,12 +239,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of products
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/ProductDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of products: position 0 is always the array of matched products (paginated); position 1 is always the total count of matched products, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -355,20 +357,13 @@ paths:
               schema:
                 type: array
                 description: |-
-                  A 2-position tuple: position 0 is always the array of matched pilots, position 1 is always the total count of matched pilots (ignoring pagination). This is NOT a plain array of pilots.
+                  A 2-position tuple, NOT a plain array of pilots: position 0 is always the array of matched pilots (paginated); position 1 is always the total count of matched pilots, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
                 minItems: 2
                 maxItems: 2
-                items:
-                  oneOf:
-                    - type: array
-                      description: position 0 — the pilots matched by this search (paginated)
-                      minItems: 0
-                      uniqueItems: true
-                      items:
-                        $ref: "#/components/schemas/PilotDto"
-                    - type: integer
-                      description: position 1 — total count of matched pilots, ignoring pagination
-                      example: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -452,12 +447,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of vehicles
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/VehicleDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of vehicles: position 0 is always the array of matched vehicles (paginated); position 1 is always the total count of matched vehicles, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 3]
         "401":
           description: unauthorized
           headers:
@@ -604,12 +601,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of seasons
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/SeasonDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of seasons: position 0 is always the array of matched seasons (paginated); position 1 is always the total count of matched seasons, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -1409,13 +1408,23 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: list of applications
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/ApplicationDto"
+                type: object
+                description: paginated list of applications
+                required:
+                  - applications
+                  - total
+                properties:
+                  applications:
+                    type: array
+                    description: applications matched by this search (paginated). `layers`, `images`, `runway` and `applicationOperationalServices` are always absent here — only populated by `GET /applications/{applicationId}`.
+                    minItems: 0
+                    uniqueItems: true
+                    items:
+                      $ref: "#/components/schemas/ApplicationDto"
+                  total:
+                    type: integer
+                    description: total count of applications matched by this search, ignoring pagination
+                    example: 42
         "401":
           description: unauthorized
           headers:
@@ -2322,6 +2331,140 @@ components:
         - TARGET_FIELD_WITH_TRACK
         - TRACK
         - APPLIED_SPEED_BY_SEGMENT
+    CustomerDto:
+      type: object
+      description: |-
+        the customer this record belongs to. Present when this schema is used by `GET /seasons`/`GET /seasons/{seasonId}` and by `GET /vehicles` (nested inside `aerialCompany`) — absent when the same underlying schema is embedded elsewhere, e.g. `ApplicationDto.season` (via `GET /applications`).
+      nullable: true
+      required:
+        - id
+        - name
+        - shortName
+        - defaultMap
+        - idealSuccessScoreThreshold
+        - idealUniformityScoreThreshold
+        - idealFailureScoreThreshold
+        - idealWasteScoreThreshold
+        - overFlowRateScoreThreshold
+        - underFlowRateScoreThreshold
+        - overHeightScoreThreshold
+        - underHeightScoreThreshold
+        - isFlightPlanningEnabled
+        - droneFuelingTimeTarget
+        - aircraftFuelingTimeTarget
+        - tractorFuelingTimeTarget
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique customer identification
+          example: 9b33e7ca-6cfb-4458-bfe4-d28ee7b373eb
+        name:
+          type: string
+          nullable: false
+          description: customer name
+          example: My Company
+        shortName:
+          type: string
+          nullable: false
+          description: customer short name
+          example: My Co
+        documentNumber:
+          type: string
+          nullable: true
+          description: customer document number (in Brazil, CNPJ)
+          example: "11.111.111/1111-44"
+        defaultMap:
+          type: string
+          nullable: false
+          description: default map provider for this customer
+          example: mapbox_map
+        idealSuccessScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal success score threshold (0-100) configured for this customer
+          example: 80
+        idealUniformityScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal uniformity score threshold (0-100) configured for this customer
+          example: 80
+        idealFailureScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal failure score threshold (0-100) configured for this customer
+          example: 10
+        idealWasteScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal waste score threshold (0-100) configured for this customer
+          example: 15
+        overFlowRateScoreThreshold:
+          type: number
+          nullable: false
+          description: over flow rate score threshold configured for this customer
+          example: 10
+        underFlowRateScoreThreshold:
+          type: number
+          nullable: false
+          description: under flow rate score threshold configured for this customer
+          example: 10
+        overHeightScoreThreshold:
+          type: number
+          nullable: false
+          description: over height score threshold configured for this customer
+          example: 10
+        underHeightScoreThreshold:
+          type: number
+          nullable: false
+          description: under height score threshold configured for this customer
+          example: 10
+        isFlightPlanningEnabled:
+          type: boolean
+          nullable: false
+          description: whether flight planning is enabled for this customer
+          example: false
+        droneFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target drone fueling time (in minutes) configured for this customer
+          example: 15
+        aircraftFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target aircraft fueling time (in minutes) configured for this customer
+          example: 15
+        tractorFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target tractor fueling time (in minutes) configured for this customer
+          example: 15
+        status:
+          type: string
+          nullable: false
+          description: customer status
+          example: enabled
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the customer was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the customer was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the customer was deleted
+          example: null
     SeasonDto:
       type: object
       required:
@@ -2333,6 +2476,8 @@ components:
       properties:
         id:
           $ref: "#/components/schemas/SeasonId"
+        customer:
+          $ref: "#/components/schemas/CustomerDto"
         startedIn:
           type: string
           format: date-time
@@ -2372,6 +2517,29 @@ components:
         - slug
         - status
         - createdAt
+        - totalCroppedNotAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalExternalAppliedOverlapArea
+        - totalInternalAppliedArea
+        - totalExternalAppliedArea
+        - totalAppliedOverlapArea
+        - totalTargetFieldArea
+        - totalNotAppliedArea
+        - totalDistanceTraveled
+        - totalAppliedArea
+        - totalAppliedOverdoseArea
+        - totalCostByArea
+        - totalCostByAppliedArea
+        - totalCostByTargetFieldArea
+        - totalCostByExternalAppliedArea
+        - totalCostByInternalAppliedArea
+        - totalCostByInternalAppliedOverlapArea
+        - totalCostByExternalAppliedOverlapArea
+        - displacementMargin
+        - averageSampleRate
+        - totalFieldArea
+        - totalApplicationArea
+        - totalViolatedArea
       properties:
         id:
           type: string
@@ -2730,6 +2898,8 @@ components:
           nullable: true
           description: aerial company registration number at MAPA (Ministério da Agricultura, Pecuária e Abastecimento)
           example: "123456"
+        customer:
+          $ref: "#/components/schemas/CustomerDto"
         createdAt:
           type: string
           format: date-time
@@ -2865,6 +3035,7 @@ components:
         - id
         - area
         - field
+        - name
         - totalTargetFieldArea
         - totalInternalAppliedArea
         - totalNotAppliedArea
@@ -2954,6 +3125,8 @@ components:
           example: 98.45
         field:
           $ref: "#/components/schemas/FieldDto"
+        applicationTrack:
+          $ref: "#/components/schemas/ApplicationTrackDto"
         name:
           type: string
           nullable: false
@@ -3154,8 +3327,25 @@ components:
         - pilot
         - startedIn
         - finishedIn
-        - vehicle
         - createdAt
+        - totalFlightStopTime
+        - totalAppliedOverlapArea
+        - totalExternalAppliedArea
+        - totalAppliedArea
+        - totalDistanceTraveled
+        - totalAppliedOverTrackArea
+        - totalAppliedOverRestrictionArea
+        - totalAppliedOverBufferArea
+        - averageSampleRate
+        - displacementMargin
+        - totalInternalAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalAppliedOverdoseArea
+        - totalCost
+        - totalCostByAppliedExternalArea
+        - totalCostByAppliedInternalArea
+        - totalCostByAppliedInternalOverlapArea
+        - totalCostByArea
       properties:
         id:
           type: string
@@ -4085,6 +4275,7 @@ components:
         - trackAreaRatio
         - applicationFields
         - createdAt
+        - updatedAt
       properties:
         id:
           type: string
@@ -4352,7 +4543,7 @@ components:
           minItems: 0
           nullable: true
           uniqueItems: true
-          description: flow rate data of application
+          description: map layers generated for this application
           items:
             $ref: "#/components/schemas/LayersDto"
         images:
@@ -4735,6 +4926,70 @@ components:
           nullable: true
           description: identification of the parent farm, when this farm was associated with one on creation
           example: a4f8d25b-27cd-473a-ae25-ed6e8ff8f321
+        parentFarm:
+          type: object
+          nullable: true
+          description: the parent farm's own record, present only on GET /farms/{farmId} (absent from GET /farms list responses). Note its `count`/`area`/`boundaries` are not aggregated from active fields the way the top-level farm's are, and it uses `childrenCount` instead of `childrenAmount` — it is not re-enriched the same way the top-level farm is, and does not itself carry a further nested `parentFarm`.
+          required:
+            - id
+            - name
+            - namespace
+            - area
+            - count
+            - boundaries
+            - childrenCount
+            - createdAt
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              example: 5854e582-e539-43ca-a153-52c66f4c98c5
+            name:
+              type: string
+              nullable: false
+              example: Root Farm
+            namespace:
+              type: string
+              nullable: false
+              example: Farms
+            area:
+              type: number
+              nullable: false
+              example: 0
+            count:
+              type: integer
+              nullable: false
+              example: 0
+            boundaries:
+              type: string
+              nullable: false
+              format: wkt
+              example: "POLYGON EMPTY"
+            childrenCount:
+              type: integer
+              nullable: false
+              example: 0
+            parentFarmId:
+              type: string
+              format: uuid
+              nullable: true
+              example: null
+            createdAt:
+              type: string
+              format: date-time
+              nullable: false
+              example: 2024-05-27T22:52:44.903Z
+            updatedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: 2024-05-27T22:55:44.903Z
+            deletedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: null
         farmNameHierarchy:
           type: array
           nullable: true
@@ -4843,10 +5098,15 @@ components:
         farm:
           type: object
           nullable: false
-          description: farm (and customer) this field was created under
+          description: |-
+            farm (and customer) this field was created under. `count`/`area`/`boundaries`/`childrenCount` are not real aggregated data here — this is an in-memory farm reference built from just its `id` (never re-fetched from the database), so these 4 properties are always its class defaults (`0`/`0`/`"POLYGON EMPTY"`/`0`), not the farm's actual values. Use `GET /farms/{farmId}` if you need the real ones.
           required:
             - id
             - customer
+            - count
+            - area
+            - boundaries
+            - childrenCount
           properties:
             id:
               type: string
@@ -4865,6 +5125,27 @@ components:
                   format: uuid
                   nullable: false
                   example: 134457d7-58d3-4247-9f67-3fa82b3a0535
+            count:
+              type: integer
+              nullable: false
+              description: always `0` — not the farm's real field count, see note above
+              example: 0
+            area:
+              type: number
+              nullable: false
+              description: always `0` — not the farm's real area, see note above
+              example: 0
+            boundaries:
+              type: string
+              format: wkt
+              nullable: false
+              description: always `"POLYGON EMPTY"` — not the farm's real boundaries, see note above
+              example: "POLYGON EMPTY"
+            childrenCount:
+              type: integer
+              nullable: false
+              description: always `0` — not the farm's real children count, see note above
+              example: 0
         boundaries:
           type: string
           nullable: false
@@ -4898,8 +5179,15 @@ components:
           nullable: false
           description: unique product identification
           example: efae9cea-767f-4d28-a4e6-891ee7b0e998
-        amount:
-          $ref: "#/components/schemas/AmountDto"
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        cost:
+          type: number
+          format: double
+          nullable: false
+          default: 0
+          description: product cost, in `currency`
+          example: 332.43
         code:
           type: integer
           nullable: true
@@ -4954,8 +5242,15 @@ components:
           nullable: false
           description: unique product identification
           example: efae9cea-767f-4d28-a4e6-891ee7b0e998
-        amount:
-          $ref: "#/components/schemas/AmountDto"
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        cost:
+          type: number
+          format: double
+          nullable: false
+          default: 0
+          description: product cost, in `currency`
+          example: 332.43
         code:
           type: integer
           nullable: true
@@ -5009,14 +5304,13 @@ components:
         - finishedIn
         - createdAt
         - crop
-        - customer
       properties:
         id:
           $ref: "#/components/schemas/SeasonId"
         customer:
           type: object
-          nullable: false
-          description: customer this season was created under
+          nullable: true
+          description: customer this season was created under. Absent when this call restored a previously soft-deleted season with matching data instead of creating a new one.
           required:
             - id
           properties:
@@ -5051,6 +5345,12 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was updated
           example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the season was deleted
+          example: 2024-05-27T22:59:44.903Z
     PilotId:
       type: string
       format: uuid
@@ -5089,12 +5389,16 @@ components:
       example: "fe1e9d3c-18fa-4e31-86c1-38c33be1856c"
     CreatePreFlightDto:
       type: object
+      required:
+        - slug
       properties:
         slug:
           type: string
-          nullable: true
-          description: service order identification
-          default: "OS-XXXXXXXXXX"
+          nullable: false
+          description: |-
+            service order identification. Required: this endpoint looks up an existing service order by this value, so omitting it either fails with a false-positive "already exists" error or a server error, depending on whether the customer already has other service orders.
+
+            to obtain a valid slug, read `serviceOrder.slug` from `GET /applications/{applicationId}` — there is currently no other way to discover one via this API.
           example: "OS-1234567899"
         status:
           $ref: "#/components/schemas/ServiceOrderStatusEnum"
