@@ -32,6 +32,8 @@ jobs:
           # public and its Actions logs/step summaries are visible to anyone.
           display_report: 'false'
           show_full_output: 'false'
+          claude_args: |
+            --model claude-sonnet-5
           prompt: |
             You are updating the public OpenAPI specification (`openapi.yaml`) in this
             repository to reflect a contract change that was merged in the private
