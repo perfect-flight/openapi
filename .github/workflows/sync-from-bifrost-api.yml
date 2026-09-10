@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Update OpenAPI spec via Claude
+        timeout-minutes: 5
         uses: anthropics/claude-code-action@c038e4dcdedfbbca18dfb17df35a17e40ded4ddc # v1.0.186
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -34,6 +35,8 @@ jobs:
           show_full_output: 'false'
           claude_args: |
             --model claude-sonnet-5
+            --allowedTools "Edit(openapi.yaml)" "Edit(CHANGELOG.md)" "Bash(npm run *)" "Bash(git checkout *)" "Bash(git add *)" "Bash(git commit *)" "Bash(git push *)" "Bash(gh pr *)"
+            --max-budget-usd 3
           prompt: |
             You are updating the public OpenAPI specification (`openapi.yaml`) in this
             repository to reflect a contract change that was merged in the private
