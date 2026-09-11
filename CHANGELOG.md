@@ -17,8 +17,77 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   ordenação por `createdAt`, default `asc`) e `withBoundaries` (default
   `true`; quando `false`, omite o campo `boundaries` de cada item de
   `fields`, deixando listagens grandes mais leves).
+- `ApplicationDto` (`GET /applications`, `GET /applications/{applicationId}`)
+  agora documenta diversos campos já retornados pela API e que faltavam na
+  doc, entre eles `processedAt` e `lastReprocessedAt`, os campos de
+  inspeção (`inspectionFlags`, `inspectionStatus`, `inspectionReason`,
+  `inspectionObservation`, `notChargeable`, `deletedObservation`), `farms`,
+  `restrictionFields`, `applicationTrack`, `runway`,
+  `applicationOperationalServices`, `speedDataByGroup`, `images` e as
+  variações de velocidade planejada/realizada (`plannedAverageSpeed`,
+  `flowRangeVariation`, `heightRangeVariation`). Os objetos aninhados
+  (`schedules`, `products`, `logs`, `serviceOrder`) também ganharam vários
+  campos que a API já retorna e não estavam documentados.
+- `VehicleDto` (`GET /vehicles`) agora documenta `idealHeight`,
+  `idealSpeed`, `idealSwathWidth`, e os campos de integração com a nuvem do
+  fabricante DGPS (`externalVehicleId`, `connector`).
+- `VehicleModelDto` agora documenta o campo `type`.
+- `FarmDto` (`GET /farms`) agora documenta os campos de hierarquia
+  (`hasChildren`, `childrenAmount`, `parentFarmId`, `farmNameHierarchy`).
+- `ProductDto`/`ProductCreatedDto` (`product`) e `SuggestedProductDto`
+  (`suggested products`) agora documentam `formulation`,
+  `toxicityCategory` e `colorBand`; `ProductDto`/`ProductCreatedDto` também
+  passam a documentar `serviceType`.
+- `AerialCompanyDto` (usado em `pilot` e `vehicle`) agora documenta `state`,
+  `city` e `mapaRegistration`.
+- `AerialCompanyDto` (`GET /vehicles`) e `SeasonDto` (`GET /seasons`,
+  `GET /seasons/{seasonId}`) agora documentam o campo `customer` (novo
+  schema `CustomerDto`), já retornado pela API e ausente da doc anterior.
+- `ApplicationFieldDto` agora documenta o campo aninhado `applicationTrack`,
+  já retornado pela API.
+- `FarmDto` agora documenta o campo aninhado `parentFarm`, presente apenas
+  em `GET /farms/{farmId}` (ausente da listagem `GET /farms`).
+- `FieldCreatedDto.farm` (resposta de `POST /fields`) agora documenta os
+  campos `count`, `area`, `boundaries` e `childrenCount`.
+- `SeasonCreatedDto` (resposta de `POST /seasons`) agora documenta
+  `deletedAt`.
 
 ### Fixed
+- `GET /applications` estava documentado como retornando um array de
+  aplicações direto; corrigido para o formato real, um objeto
+  `{applications, total}`.
+- `GET /seasons`, `GET /products` e `GET /vehicles` estavam documentados
+  como retornando um array direto; corrigidos para o formato real, uma
+  tupla `[itens, total]` — mesmo padrão já conhecido de `GET /pilots`.
+- A representação da tupla de `GET /pilots` usava `oneOf`, que não fixa a
+  posição de cada elemento da tupla (gera exemplo e codegen incorretos em
+  ferramentas que consomem o spec); corrigida a representação. A mesma
+  correção foi aplicada de saída nas tuplas novas de `/seasons`, `/products`
+  e `/vehicles`.
+- `ProductDto`/`ProductCreatedDto` documentavam um objeto `amount` aninhado;
+  corrigido para os campos reais, soltos: `currency` e `cost`.
+- `ServiceOrderDto`: 23 campos numéricos de totais estavam documentados como
+  sempre presentes (`nullable: false`) mas fora do `required`; corrigido,
+  adicionados ao `required`.
+- `ApplicationScheduleDto`: mesma correção que `ServiceOrderDto`, para 18
+  campos de totais.
+- `ApplicationScheduleDto.vehicle` estava documentado como sempre presente
+  (`required`); corrigido para opcional, já que é uma relação que pode não
+  existir.
+- `ApplicationFieldDto.name` estava com `nullable: false` mas fora do
+  `required`; corrigido.
+- `ApplicationTrackDto.updatedAt` estava documentado como opcional;
+  corrigido para sempre presente (`required`).
+- A descrição de `layers` (`ApplicationDto.layers`) estava copiada de
+  `flowRateDataByGroup` ("flow rate data of application"); corrigida.
+- `CreatePreFlightDto.slug` estava documentado como opcional; corrigido
+  para obrigatório — o endpoint depende dele para localizar a Service
+  Order correspondente, e omiti-lo causa comportamento incorreto. A
+  descrição agora também aponta onde obter um slug válido
+  (`GET /applications/{applicationId}.serviceOrder.slug`).
+- `SeasonCreatedDto.customer` estava documentado como sempre presente;
+  corrigido para opcional, já que fica ausente quando a chamada restaura
+  uma season soft-deleted em vez de criar uma nova.
 - `FieldDto.boundaries` estava documentado como sempre presente; corrigido
   para opcional, já que `GET /fields` pode omiti-lo (`withBoundaries=false`).
   A descrição de `boundaries` em `FieldDto` e `FarmDto` agora deixa explícito
@@ -26,6 +95,19 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - `ApplicationFieldDto.boundaries` estava documentado como sempre presente;
   corrigido para opcional, já que `GET /applications` pode omiti-lo
   (`withBoundaries=false`).
+- `GET /pilots` estava documentado como retornando um array de pilotos
+  direto; corrigido para o formato real, uma tupla `[pilotos, total]`.
+- O `type` de cada item de `layers` (`ApplicationDto.layers`) estava
+  documentado com um conjunto de valores e uma convenção de nomenclatura
+  (`AppliedOverlap`) diferentes dos realmente usados pela API
+  (`APPLIED_OVERLAP`), e faltavam vários valores possíveis; corrigido para
+  os 27 valores reais. `layers` também ganhou os campos `length`,
+  `createdAt` e `updatedAt`, que já eram retornados.
+- A resposta de `POST /fields` estava documentada com um `farmId` plano;
+  corrigida para o formato real, que retorna `farm.id` (e `farm.customer.id`)
+  aninhados.
+- A resposta de `POST /seasons` agora documenta o campo `customer` aninhado,
+  já retornado pela API e ausente da doc anterior.
 
 ## [0.0.8] - 2026-08-05
 

@@ -239,12 +239,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of products
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/ProductDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of products: position 0 is always the array of matched products (paginated); position 1 is always the total count of matched products, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -354,12 +356,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of pilots
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/PilotDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of pilots: position 0 is always the array of matched pilots (paginated); position 1 is always the total count of matched pilots, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -443,12 +447,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of vehicles
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/VehicleDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of vehicles: position 0 is always the array of matched vehicles (paginated); position 1 is always the total count of matched vehicles, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 3]
         "401":
           description: unauthorized
           headers:
@@ -595,12 +601,14 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of seasons
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/SeasonDto"
+                description: |-
+                  A 2-position tuple, NOT a plain array of seasons: position 0 is always the array of matched seasons (paginated); position 1 is always the total count of matched seasons, ignoring pagination.
+
+                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
+                minItems: 2
+                maxItems: 2
+                items: {}
+                example: [[], 2]
         "401":
           description: unauthorized
           headers:
@@ -699,10 +707,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -993,10 +998,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -1120,7 +1122,7 @@ paths:
             $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
-          description: number of applications per page
+          description: number of fields per page
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
@@ -1211,7 +1213,7 @@ paths:
             $ref: "#/components/schemas/PageQueryParameter"
         - name: pageSize
           in: query
-          description: number of applications per page
+          description: number of fields per page
           required: false
           schema:
             $ref: "#/components/schemas/PageSizeQueryParameter"
@@ -1305,10 +1307,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -1320,10 +1319,7 @@ paths:
               required: true
               description: correlation identifier between request and response
               schema:
-                type: string
-                format: uuid
-                nullable: false
-                example: d5de0545-a36b-4c9d-b0cd-4e6e8a523bf1
+                $ref: "#/components/schemas/CorrelationHeader"
           content:
             application/json:
               schema:
@@ -1412,13 +1408,23 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: list of applications
-                minimum: 0
-                minItems: 0
-                uniqueItems: true
-                items:
-                  $ref: "#/components/schemas/ApplicationDto"
+                type: object
+                description: paginated list of applications
+                required:
+                  - applications
+                  - total
+                properties:
+                  applications:
+                    type: array
+                    description: applications matched by this search (paginated). `layers`, `images`, `runway` and `applicationOperationalServices` are always absent here — only populated by `GET /applications/{applicationId}`.
+                    minItems: 0
+                    uniqueItems: true
+                    items:
+                      $ref: "#/components/schemas/ApplicationDto"
+                  total:
+                    type: integer
+                    description: total count of applications matched by this search, ignoring pagination
+                    example: 42
         "401":
           description: unauthorized
           headers:
@@ -1886,13 +1892,13 @@ components:
     PageQueryParameter:
       type: integer
       format: int32
-      # TODO description:
+      description: current page number
       example: 2
       default: 1
     PageSizeQueryParameter:
       type: integer
       format: int32
-      # TODO description:
+      description: number of items per page
       example: 20
       default: 10
     WithBoundariesQueryParameter:
@@ -2146,6 +2152,319 @@ components:
         - solid_disperser
         - hydraulic_nozzle
         - rotating_disc
+    ProductFormulationEnum:
+      type: string
+      description: product formulation
+      example: wettable_powder
+      enum:
+        - acidifier_buffer
+        - herbicide_adjuvant
+        - parasitoid_adults
+        - antifoam
+        - nmp_coadjuvant
+        - fumigant_tablet
+        - emulsifiable_concentrate
+        - drift_controller
+        - cs_encapsulated_suspension
+        - capsule_suspension
+        - dc_dispersible_concentrate
+        - oil_water_dispersion
+        - dp_dry_powder
+        - water_emulsion
+        - eo_water_in_oil_emulsion
+        - spreading_adhesive
+        - ew_oil_in_water_emulsion
+        - ff_fumigant_pellets
+        - fluid_seed_treatment_formulation
+        - mixed_cs_sc_formulation
+        - fs_concentrated_suspension_seed_treatment
+        - fu_fumigant
+        - granule
+        - water_dispersible_granule
+        - soluble_granule
+        - living_insects
+        - bait
+        - concentrated_block_bait
+        - block_bait
+        - microemulsion
+        - od_oil_dispersion
+        - living_organisms
+        - paste
+        - wettable_powder
+        - soluble_powder
+        - seed
+        - sl_soluble_concentrate
+        - aqueous_solution
+        - concentrated_suspension
+        - suspo_emulsion
+        - ultra_low_volume
+        - ws_powder_for_aqueous_paste
+        - other
+        - living_mites
+        - mineral_vegetable_oil
+    ProductToxicityCategoryEnum:
+      type: string
+      description: product toxicity category
+      example: category_3_moderately_toxic
+      enum:
+        - category_1_extremely_toxic
+        - category_2_highly_toxic
+        - category_3_moderately_toxic
+        - category_4_slightly_toxic
+        - category_5_unlikely_to_cause_acute_harm
+        - not_determined_due_to_product_nature
+        - not_classified
+    ProductColorBandEnum:
+      type: string
+      description: product color band
+      example: blue
+      enum:
+        - yellow
+        - blue
+        - green
+        - red
+    DgpsConnectorEnum:
+      type: string
+      description: DGPS hardware manufacturer cloud connector this vehicle is linked to
+      example: satloc
+      enum:
+        - travicar
+        - satloc
+        - agnav
+        - agpilotx
+        - verion
+        - trimble
+        - dji
+        - pyka
+        - xag
+        - eavision
+    IdentityProviderEnum:
+      type: string
+      description: identity provider used to authenticate the user
+      example: aws_cognito
+      enum:
+        - aws_cognito
+    UserStatusEnum:
+      type: string
+      description: user status
+      example: enabled
+      enum:
+        - enabled
+        - disabled
+    RestrictionFieldTypeEnum:
+      type: string
+      description: restriction field type
+      example: hydrography
+      enum:
+        - neighboring_property
+        - apps_and_native_vegetation
+        - hydrography
+        - animal_breeding
+        - others
+        - city
+        - villages_and_centers
+        - apiaries
+        - power_lines
+        - roads_and_railways
+        - airports
+        - experimental_area
+    ApplicationInspectionFlagEnum:
+      type: string
+      description: warning flag raised during application inspection
+      example: success_score_warning
+      enum:
+        - success_score_warning
+        - uniformity_score_warning
+        - failure_score_warning
+        - waste_score_warning
+        - over_height_out_of_range_warning
+        - under_height_out_of_range_warning
+        - over_flow_rate_out_of_range_warning
+        - under_flow_rate_out_of_range_warning
+    ApplicationInspectionStatusEnum:
+      type: string
+      description: application inspection status
+      example: not_inspected
+      enum:
+        - not_inspected
+        - inspected
+        - auto_inspected
+    ApplicationInspectionReasonEnum:
+      type: string
+      description: application inspection reason
+      example: unknown
+      enum:
+        - unknown
+        - difficult_operation_area
+        - adverse_weather_condition
+        - instrument_error
+        - operational_error
+    ApplicationLayerNameEnum:
+      type: string
+      description: application layer/image type
+      example: APPLIED
+      enum:
+        - APPLIED
+        - APPLIED_WITHOUT_OVERLAP
+        - APPLIED_OVERLAP
+        - EXTERNAL_APPLIED
+        - INTERNAL_APPLIED
+        - INTERNAL_APPLIED_OVERLAP
+        - EXTERNAL_APPLIED_OVERLAP
+        - CROPPED_NOT_APPLIED
+        - NOT_APPLIED
+        - PATH_TRAVELED
+        - RESTRICTION_FIELD
+        - RESTRICTION_FIELD_BUFFER
+        - APPLIED_WITH_RESTRICTION_VIOLATION
+        - APPLIED_WITH_RESTRICTION_BUFFER_VIOLATION
+        - APPLIED_WITHOUT_RESTRICTION_VIOLATION
+        - PATH_TRAVELED_WITH_WARNING
+        - PATH_TRAVELED_WITHOUT_WARNING
+        - TARGET_FIELD
+        - APPLIED_POINT
+        - APPLIED_SEGMENT
+        - APPLIED_FLOW_RATE_BY_SWATH
+        - APPLIED_FLOW_RATE_BY_SEGMENT
+        - APPLIED_HEIGHT_BY_SEGMENT
+        - APPLIED_SCHEDULE
+        - TARGET_FIELD_WITH_TRACK
+        - TRACK
+        - APPLIED_SPEED_BY_SEGMENT
+    CustomerDto:
+      type: object
+      description: |-
+        the customer this record belongs to. Present when this schema is used by `GET /seasons`/`GET /seasons/{seasonId}` and by `GET /vehicles` (nested inside `aerialCompany`) — absent when the same underlying schema is embedded elsewhere, e.g. `ApplicationDto.season` (via `GET /applications`).
+      nullable: true
+      required:
+        - id
+        - name
+        - shortName
+        - defaultMap
+        - idealSuccessScoreThreshold
+        - idealUniformityScoreThreshold
+        - idealFailureScoreThreshold
+        - idealWasteScoreThreshold
+        - overFlowRateScoreThreshold
+        - underFlowRateScoreThreshold
+        - overHeightScoreThreshold
+        - underHeightScoreThreshold
+        - isFlightPlanningEnabled
+        - droneFuelingTimeTarget
+        - aircraftFuelingTimeTarget
+        - tractorFuelingTimeTarget
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique customer identification
+          example: 9b33e7ca-6cfb-4458-bfe4-d28ee7b373eb
+        name:
+          type: string
+          nullable: false
+          description: customer name
+          example: My Company
+        shortName:
+          type: string
+          nullable: false
+          description: customer short name
+          example: My Co
+        documentNumber:
+          type: string
+          nullable: true
+          description: customer document number (in Brazil, CNPJ)
+          example: "11.111.111/1111-44"
+        defaultMap:
+          type: string
+          nullable: false
+          description: default map provider for this customer
+          example: mapbox_map
+        idealSuccessScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal success score threshold (0-100) configured for this customer
+          example: 80
+        idealUniformityScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal uniformity score threshold (0-100) configured for this customer
+          example: 80
+        idealFailureScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal failure score threshold (0-100) configured for this customer
+          example: 10
+        idealWasteScoreThreshold:
+          type: number
+          nullable: false
+          description: ideal waste score threshold (0-100) configured for this customer
+          example: 15
+        overFlowRateScoreThreshold:
+          type: number
+          nullable: false
+          description: over flow rate score threshold configured for this customer
+          example: 10
+        underFlowRateScoreThreshold:
+          type: number
+          nullable: false
+          description: under flow rate score threshold configured for this customer
+          example: 10
+        overHeightScoreThreshold:
+          type: number
+          nullable: false
+          description: over height score threshold configured for this customer
+          example: 10
+        underHeightScoreThreshold:
+          type: number
+          nullable: false
+          description: under height score threshold configured for this customer
+          example: 10
+        isFlightPlanningEnabled:
+          type: boolean
+          nullable: false
+          description: whether flight planning is enabled for this customer
+          example: false
+        droneFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target drone fueling time (in minutes) configured for this customer
+          example: 15
+        aircraftFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target aircraft fueling time (in minutes) configured for this customer
+          example: 15
+        tractorFuelingTimeTarget:
+          type: number
+          nullable: false
+          description: target tractor fueling time (in minutes) configured for this customer
+          example: 15
+        status:
+          type: string
+          nullable: false
+          description: customer status
+          example: enabled
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the customer was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the customer was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the customer was deleted
+          example: null
     SeasonDto:
       type: object
       required:
@@ -2157,6 +2476,8 @@ components:
       properties:
         id:
           $ref: "#/components/schemas/SeasonId"
+        customer:
+          $ref: "#/components/schemas/CustomerDto"
         startedIn:
           type: string
           format: date-time
@@ -2196,6 +2517,29 @@ components:
         - slug
         - status
         - createdAt
+        - totalCroppedNotAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalExternalAppliedOverlapArea
+        - totalInternalAppliedArea
+        - totalExternalAppliedArea
+        - totalAppliedOverlapArea
+        - totalTargetFieldArea
+        - totalNotAppliedArea
+        - totalDistanceTraveled
+        - totalAppliedArea
+        - totalAppliedOverdoseArea
+        - totalCostByArea
+        - totalCostByAppliedArea
+        - totalCostByTargetFieldArea
+        - totalCostByExternalAppliedArea
+        - totalCostByInternalAppliedArea
+        - totalCostByInternalAppliedOverlapArea
+        - totalCostByExternalAppliedOverlapArea
+        - displacementMargin
+        - averageSampleRate
+        - totalFieldArea
+        - totalApplicationArea
+        - totalViolatedArea
       properties:
         id:
           type: string
@@ -2210,6 +2554,209 @@ components:
           example: "OS-1234"
         status:
           $ref: "#/components/schemas/ServiceOrderStatusEnum"
+        observation:
+          type: string
+          nullable: true
+          description: service order observation
+          example: my service order comments
+        averageUniformityScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageFailureScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageWasteScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageSuccessScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageRateFlow:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        averageHeight:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        averageSpeed:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        totalCroppedNotAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalInternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalExternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalInternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalExternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalTargetFieldArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalNotAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalDistanceTraveled:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverdoseArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalCostByArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByTargetFieldArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByExternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByInternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByInternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByExternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        displacementMargin:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 147.67
+        averageSampleRate:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 2.58
+        preFlightSeason:
+          $ref: "#/components/schemas/PreFlightSeasonDto"
+        plannedAverageHeight:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        plannedAverageRateFlow:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        plannedAverageSpeed:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        totalFieldArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalApplicationArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalViolatedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
         createdAt:
           type: string
           format: date-time
@@ -2228,6 +2775,13 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the service order was deleted
           example: 2024-05-27T22:59:44.903Z
+    PreFlightSeasonDto:
+      type: object
+      required:
+        - season
+      properties:
+        season:
+          $ref: "#/components/schemas/SeasonDto"
     VehicleManufacturerDto:
       type: object
       required:
@@ -2269,6 +2823,7 @@ components:
       required:
         - id
         - name
+        - type
         - manufacturer
         - createdAt
       properties:
@@ -2283,6 +2838,8 @@ components:
           nullable: false
           description: vehicle model
           example: AT-401
+        type:
+          $ref: "#/components/schemas/VehicleTypeEnum"
         manufacturer:
           $ref: "#/components/schemas/VehicleManufacturerDto"
         createdAt:
@@ -2326,6 +2883,23 @@ components:
           nullable: true
           description: aerial company document number
           example: 00.000.000/0000-00
+        state:
+          type: string
+          nullable: true
+          description: state where the aerial company is located
+          example: SP
+        city:
+          type: string
+          nullable: true
+          description: city where the aerial company is located
+          example: São Paulo
+        mapaRegistration:
+          type: string
+          nullable: true
+          description: aerial company registration number at MAPA (Ministério da Agricultura, Pecuária e Abastecimento)
+          example: "123456"
+        customer:
+          $ref: "#/components/schemas/CustomerDto"
         createdAt:
           type: string
           format: date-time
@@ -2410,12 +2984,33 @@ components:
           $ref: "#/components/schemas/AerialCompanyDto"
         pulverizerType:
           $ref: "#/components/schemas/PulverizerTypeEnum"
-          nullable: true
         serialNumber:
           type: string
           nullable: true
           description: vehicle serial number, assigned automatically for aircraft
           example: PT-FFG123456
+        idealHeight:
+          type: number
+          nullable: true
+          description: ideal application height for this vehicle
+          example: 3.5
+        idealSpeed:
+          type: number
+          nullable: true
+          description: ideal application speed for this vehicle
+          example: 120.5
+        idealSwathWidth:
+          type: number
+          nullable: true
+          description: ideal application swath width for this vehicle
+          example: 18
+        externalVehicleId:
+          type: string
+          nullable: true
+          description: identification of this vehicle on the linked DGPS cloud connector, when mapped
+          example: "b4e5df6e-3b1a-4b4e-8f7f-9d6f7c6a5e4d"
+        connector:
+          $ref: "#/components/schemas/DgpsConnectorEnum"
         createdAt:
           type: string
           format: date-time
@@ -2440,6 +3035,7 @@ components:
         - id
         - area
         - field
+        - name
         - totalTargetFieldArea
         - totalInternalAppliedArea
         - totalNotAppliedArea
@@ -2466,66 +3062,76 @@ components:
           format: double
           minimum: 0
           nullable: false
-          # TODO description:
+          description: application field area in hectares
           example: 33.43
         totalTargetFieldArea:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          description: total target field area (in hectares) for this application field
           nullable: false
           example: 234.43
         totalInternalAppliedArea:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          description: total internal applied area (in hectares) for this application field
           nullable: false
           example: 234.43
         totalNotAppliedArea:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          description: total not applied area (in hectares) for this application field
           nullable: false
           example: 234.43
         totalInternalAppliedOverlapArea:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          description: total internal applied overlap area (in hectares) for this application field
           nullable: false
           example: 234.43
         totalAppliedOverdoseArea:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          description: total applied overdose area (in hectares) for this application field
           nullable: false
           example: 234.43
         averageUniformityScore:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          maximum: 100
+          description: average uniformity score (0-100) for this application field
           nullable: false
-          example: 234.43
+          example: 98.45
         averageFailureScore:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          maximum: 100
+          description: average failure score (0-100) for this application field
           nullable: false
-          example: 234.43
+          example: 98.45
         averageSuccessScore:
           type: number
           format: double
           minimum: 0
-          # TODO description:
+          maximum: 100
+          description: average success score (0-100) for this application field
           nullable: false
-          example: 234.43
+          example: 98.45
         field:
           $ref: "#/components/schemas/FieldDto"
+        applicationTrack:
+          $ref: "#/components/schemas/ApplicationTrackDto"
+        name:
+          type: string
+          nullable: false
+          description: application field name
+          example: Field 01
         createdAt:
           type: string
           format: date-time
@@ -2669,7 +3275,32 @@ components:
           example: 1.25
         amount:
           $ref: "#/components/schemas/AmountDto"
-        # TODO SeasonProductDto product
+        customerProduct:
+          $ref: "#/components/schemas/ProductDto"
+        totalAppliedAreaCost:
+          type: number
+          format: double
+          nullable: true
+          description: total cost of this product over the applied area
+          example: 452.87
+        totalCostByArea:
+          type: number
+          format: double
+          nullable: true
+          description: total cost of this product per area unit
+          example: 12.4
+        totalEstimatedCost:
+          type: number
+          format: double
+          nullable: true
+          description: total estimated cost of this product for the whole application
+          example: 980.12
+        totalVolume:
+          type: number
+          format: double
+          nullable: true
+          description: total volume of this product used in the application
+          example: 320.5
         createdAt:
           type: string
           format: date-time
@@ -2696,8 +3327,25 @@ components:
         - pilot
         - startedIn
         - finishedIn
-        - vehicle
         - createdAt
+        - totalFlightStopTime
+        - totalAppliedOverlapArea
+        - totalExternalAppliedArea
+        - totalAppliedArea
+        - totalDistanceTraveled
+        - totalAppliedOverTrackArea
+        - totalAppliedOverRestrictionArea
+        - totalAppliedOverBufferArea
+        - averageSampleRate
+        - displacementMargin
+        - totalInternalAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalAppliedOverdoseArea
+        - totalCost
+        - totalCostByAppliedExternalArea
+        - totalCostByAppliedInternalArea
+        - totalCostByAppliedInternalOverlapArea
+        - totalCostByArea
       properties:
         id:
           type: string
@@ -2711,6 +3359,22 @@ components:
           $ref: "#/components/schemas/PilotDto"
         vehicle:
           $ref: "#/components/schemas/VehicleDto"
+        applicationLogs:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: logs uploaded for this application schedule
+          items:
+            $ref: "#/components/schemas/ApplicationLogDto"
+        scheduleFlight:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: flights recorded for this application schedule
+          items:
+            $ref: "#/components/schemas/ScheduleFlightDto"
         startedIn:
           type: string
           format: date-time
@@ -2742,6 +3406,143 @@ components:
           maxLength: 255
           description: application schedule comments
           example: my application schedule comments
+        totalFlightStopTime:
+          type: number
+          format: double
+          nullable: false
+          description: total flight stop time (in seconds) for this schedule
+          example: 120
+        totalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalExternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalDistanceTraveled:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverTrackArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalAppliedOverRestrictionArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalAppliedOverBufferArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        averageSpeed:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        averageSampleRate:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 2.58
+        averageWasteScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        displacementMargin:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 147.67
+        totalInternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalInternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverdoseArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        averageUniformityScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageRateFlow:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        averageHeight:
+          type: number
+          format: double
+          nullable: true
+          example: 98.45
+        totalCost:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 452.87
+        totalCostByAppliedExternalArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByAppliedInternalArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByAppliedInternalOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalCostByArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
         createdAt:
           type: string
           format: date-time
@@ -2788,6 +3589,13 @@ components:
           type: object
           nullable: true
           description: application log metadata
+        signature:
+          type: string
+          nullable: true
+          description: log file signature/checksum used to detect duplicate uploads
+          example: "810de9221bab488baf90f2d6c04ed89e40cb64dbacfbed71ff19ccf79353ac54"
+        user:
+          $ref: "#/components/schemas/UserDto"
         createdAt:
           type: string
           format: date-time
@@ -2810,9 +3618,12 @@ components:
       type: object
       required:
         - id
+        - length
         - type
         - bbox
         - metadata
+        - createdAt
+        - updatedAt
       properties:
         id:
           type: string
@@ -2820,25 +3631,13 @@ components:
           nullable: false
           description: unique layer identification
           example: fa2a8bbd-5f1d-4012-a022-12a28f676057
+        length:
+          type: number
+          nullable: false
+          description: layer file length (in bytes)
+          example: 204800
         type:
-          type: string
-          example: Applied
-          description: application layers enum
-          enum:
-            - Applied
-            - AppliedFlowRateBySegment
-            - AppliedHeightBySegment
-            - AppliedOverlap
-            - AppliedPoint
-            - AppliedSegment
-            - AppliedSpeedBySegment
-            - AppliedWithoutOverlap
-            - ExternalApplied
-            - InternalApplied
-            - InternalAppliedOverlap
-            - NotApplied
-            - PathTraveled
-            - TargetField
+          $ref: "#/components/schemas/ApplicationLayerNameEnum"
         bbox:
           type: array
           items:
@@ -2851,6 +3650,688 @@ components:
           nullable: false
           description: layer url
           example: { "url": "https://www.perfectflight.com.br/" }
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the layer was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the layer was updated
+          example: 2024-05-27T22:55:44.903Z
+    ApplicationImageDto:
+      type: object
+      required:
+        - id
+        - type
+        - metadata
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique image identification
+          example: fa2a8bbd-5f1d-4012-a022-12a28f676057
+        type:
+          $ref: "#/components/schemas/ApplicationLayerNameEnum"
+        metadata:
+          type: object
+          nullable: false
+          description: image url
+          example: { "url": "https://www.perfectflight.com.br/" }
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the image was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the image was updated
+          example: 2024-05-27T22:55:44.903Z
+    RunwayDto:
+      type: object
+      required:
+        - id
+        - name
+        - latitude
+        - longitude
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique runway identification
+          example: 8f0a5e2c-1b3d-4f6a-9c8e-7d6b5a4f3e2d
+        name:
+          type: string
+          nullable: false
+          description: runway name
+          example: Runway 01
+        latitude:
+          type: number
+          format: double
+          nullable: false
+          example: -15.5591935
+        longitude:
+          type: number
+          format: double
+          nullable: false
+          example: -56.1736668
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the runway was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the runway was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the runway was deleted
+          example: 2024-05-27T22:59:44.903Z
+    SpeedDataByGroupDto:
+      type: object
+      required:
+        - speedGroup
+        - groupArea
+        - groupPercentual
+        - groupColor
+        - initialGroupSpeed
+        - finalGroupSpeed
+      properties:
+        speedGroup:
+          type: string
+          nullable: false
+          description: speed group index
+          example: "1"
+        groupArea:
+          type: number
+          format: double
+          nullable: false
+          description: speed group area
+          example: 98.45
+        groupPercentual:
+          type: number
+          format: double
+          nullable: false
+          description: speed group area percentual
+          example: 98.45
+        groupColor:
+          type: string
+          nullable: false
+          description: speed group color
+          example: "#FEF60D"
+        initialGroupSpeed:
+          type: number
+          format: double
+          nullable: false
+          description: initial interval speed group
+          example: 98.45
+        finalGroupSpeed:
+          type: number
+          format: double
+          nullable: false
+          description: final interval speed group
+          example: 98.45
+    ScheduleFlightDto:
+      type: object
+      required:
+        - id
+        - totalFlightTime
+        - totalFuelingTime
+        - totalOpenSprayTime
+        - averageOpenSpraySpeed
+        - startDateTime
+        - endDateTime
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique schedule flight identification
+          example: 6d5c4b3a-2f1e-4d3c-8b7a-9e8d7c6b5a4f
+        totalFlightTime:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          description: total flight time (in seconds)
+          example: 2400
+        totalFuelingTime:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          description: total fueling time (in seconds)
+          example: 300
+        totalOpenSprayTime:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          description: total open spray time (in seconds)
+          example: 1800
+        averageOpenSpraySpeed:
+          type: number
+          format: double
+          nullable: false
+          description: average open spray speed
+          example: 120.5
+        startDateTime:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the flight started
+          example: 2024-05-27T22:52:44.903Z
+        endDateTime:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the flight ended
+          example: 2024-05-27T23:32:22.100Z
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the schedule flight was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the schedule flight was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the schedule flight was deleted
+          example: 2024-05-27T22:59:44.903Z
+    RestrictionFieldDto:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - boundaries
+        - warningDistance
+        - area
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique restriction field identification
+          example: d902bd61-6b7f-451e-970c-4576d1fbb238
+        name:
+          type: string
+          nullable: false
+          description: restriction field name
+          example: Restriction Field 01
+        type:
+          $ref: "#/components/schemas/RestrictionFieldTypeEnum"
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: object in wkt format that represents the georeferencing of the restriction field
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+        warningDistance:
+          type: number
+          format: double
+          nullable: false
+          description: distance in meters from the restriction field to the application field used to generate a warning
+          example: 32.54
+        area:
+          type: number
+          format: double
+          nullable: false
+          description: restriction field area in hectares
+          example: 12.4
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the restriction field was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the restriction field was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the restriction field was deleted
+          example: 2024-05-27T22:59:44.903Z
+    OperationalServiceDto:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique operational service identification
+          example: 7c6b5a4f-3e2d-4c1b-9a8f-7d6c5b4a3f2e
+        name:
+          type: string
+          nullable: false
+          description: operational service name
+          example: Aerial Survey
+        cost:
+          type: number
+          format: double
+          nullable: true
+          description: operational service cost
+          example: 250.0
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the operational service was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the operational service was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the operational service was deleted
+          example: 2024-05-27T22:59:44.903Z
+    UserDto:
+      type: object
+      required:
+        - id
+        - status
+        - name
+        - email
+        - identityProvider
+        - identityId
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique user identification
+          example: 26016dbb-f8de-4f33-9f26-d793d6ba999d
+        status:
+          $ref: "#/components/schemas/UserStatusEnum"
+        name:
+          type: string
+          nullable: false
+          description: user name
+          example: John Due
+        email:
+          type: string
+          nullable: false
+          description: user email
+          example: john.due@example.com
+        phoneNumber:
+          type: string
+          nullable: true
+          description: user phone number in E.164 format
+          example: "+5511999999999"
+        identityProvider:
+          $ref: "#/components/schemas/IdentityProviderEnum"
+        identityId:
+          type: string
+          nullable: false
+          description: identification of the user on the identity provider
+          example: "26016dbb-f8de-4f33-9f26-d793d6ba999d"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the user was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the user was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the user was deleted
+          example: 2024-05-27T22:59:44.903Z
+        lastAccessAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) of the user's last access
+          example: 2024-05-27T22:59:44.903Z
+    ApplicationFarmDto:
+      type: object
+      required:
+        - id
+        - farm
+        - name
+        - namespace
+        - totalFarmArea
+        - totalInternalAppliedArea
+        - totalNotAppliedArea
+        - totalInternalAppliedOverlapArea
+        - totalAppliedOverdoseArea
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application farm identification
+          example: 5a4f3e2d-1c9b-4a8f-7e6d-5c4b3a2f1e9d
+        farm:
+          $ref: "#/components/schemas/FarmDto"
+        name:
+          type: string
+          nullable: false
+          description: farm name at the time of the application
+          example: My Farm
+        namespace:
+          type: string
+          nullable: false
+          description: farm namespace at the time of the application
+          example: Farms
+        totalFarmArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 234.43
+        totalInternalAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalNotAppliedArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalInternalAppliedOverlapArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        totalAppliedOverdoseArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        averageSuccessScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageUniformityScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        averageFailureScore:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          nullable: true
+          example: 98.45
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application farm was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application farm was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application farm was deleted
+          example: 2024-05-27T22:59:44.903Z
+    ApplicationRestrictionFieldDto:
+      type: object
+      required:
+        - id
+        - restrictionField
+        - name
+        - type
+        - warningDistance
+        - totalRestrictionArea
+        - totalAppliedRestrictionArea
+        - totalAppliedBufferArea
+        - boundaries
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application restriction field identification
+          example: 4f3e2d1c-9b8a-4f7e-6d5c-4b3a2f1e9d8c
+        restrictionField:
+          $ref: "#/components/schemas/RestrictionFieldDto"
+        name:
+          type: string
+          nullable: false
+          description: restriction field name at the time of the application
+          example: Restriction Field 01
+        type:
+          $ref: "#/components/schemas/RestrictionFieldTypeEnum"
+        warningDistance:
+          type: number
+          format: double
+          nullable: false
+          example: 32.54
+        totalRestrictionArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalAppliedRestrictionArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        totalAppliedBufferArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 12.4
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: object in wkt format that represents the georeferencing of the restriction field at the time of the application
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application restriction field was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application restriction field was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application restriction field was deleted
+          example: 2024-05-27T22:59:44.903Z
+    ApplicationOperationalServiceDto:
+      type: object
+      required:
+        - id
+        - operationalService
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application operational service identification
+          example: 3e2d1c9b-8a7f-4e6d-5c4b-3a2f1e9d8c7b
+        operationalService:
+          $ref: "#/components/schemas/OperationalServiceDto"
+        name:
+          type: string
+          nullable: false
+          description: operational service name at the time of the application
+          example: Aerial Survey
+        totalAppliedAreaCost:
+          type: number
+          format: double
+          nullable: true
+          example: 452.87
+        totalCostByArea:
+          type: number
+          format: double
+          nullable: true
+          example: 12.4
+        totalEstimatedCost:
+          type: number
+          format: double
+          nullable: true
+          example: 980.12
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application operational service was created
+          example: 2025-01-28T08:52:24.403Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application operational service was updated
+          example: 2025-01-28T08:52:24.403Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application operational service was deleted
+          example: 2025-01-28T08:52:24.403Z
+    ApplicationTrackDto:
+      type: object
+      required:
+        - id
+        - boundaries
+        - totalTrackArea
+        - totalAppliedOverTrackArea
+        - trackAreaRatio
+        - applicationFields
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: unique application track identification
+          example: 2d1c9b8a-7f6e-4d5c-4b3a-2f1e9d8c7b6a
+        boundaries:
+          type: string
+          format: wkt
+          nullable: false
+          description: object in wkt format that represents the flight track boundaries
+          example: "POLYGON ((-56.1736668 -15.5591935,-56.1731188 -15.5592036,-56.1731971 -15.5595204,-56.1737295 -15.5594852,-56.1736668 -15.5591935))"
+        totalTrackArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 234.43
+        totalAppliedOverTrackArea:
+          type: number
+          format: double
+          minimum: 0
+          nullable: false
+          example: 98.45
+        trackAreaRatio:
+          type: number
+          format: double
+          nullable: false
+          example: 0.85
+        applicationFields:
+          type: array
+          minItems: 0
+          nullable: false
+          uniqueItems: true
+          description: application fields covered by this track
+          items:
+            $ref: "#/components/schemas/ApplicationFieldDto"
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application track was created
+          example: 2024-05-27T22:52:44.903Z
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: false
+          description: timestamp in RFC 3339 format (UTC) in which the application track was updated
+          example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application track was deleted
+          example: 2024-05-27T22:59:44.903Z
     ApplicationDto:
       type: object
       required:
@@ -2861,6 +4342,8 @@ components:
         - analysisMethod
         - schedules
         - applicationType
+        - notChargeable
+        - inspectionFlags
         - averageSuccessScore
         - averageFailureScore
         - averageUniformityScore
@@ -2903,6 +4386,32 @@ components:
           $ref: "#/components/schemas/ApplicationTypeEnum"
         deletedReason:
           $ref: "#/components/schemas/ApplicationDeletedReasonEnum"
+        notChargeable:
+          type: boolean
+          nullable: false
+          description: whether this application is not chargeable to the customer
+          example: false
+        inspectionFlags:
+          type: array
+          nullable: false
+          uniqueItems: true
+          description: warning flags raised during application inspection
+          items:
+            $ref: "#/components/schemas/ApplicationInspectionFlagEnum"
+        inspectionStatus:
+          $ref: "#/components/schemas/ApplicationInspectionStatusEnum"
+        inspectionReason:
+          $ref: "#/components/schemas/ApplicationInspectionReasonEnum"
+        inspectionObservation:
+          type: string
+          nullable: true
+          description: application inspection observation
+          example: my application inspection comments
+        deletedObservation:
+          type: string
+          nullable: true
+          description: observation registered when the application was deleted
+          example: duplicated application, recreated as OS-1234568
         fields:
           type: array
           minItems: 0
@@ -2911,6 +4420,22 @@ components:
           description: fields of application
           items:
             $ref: "#/components/schemas/ApplicationFieldDto"
+        farms:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: farms of application
+          items:
+            $ref: "#/components/schemas/ApplicationFarmDto"
+        restrictionFields:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: restriction fields of application
+          items:
+            $ref: "#/components/schemas/ApplicationRestrictionFieldDto"
         schedules:
           type: array
           minItems: 1
@@ -2935,6 +4460,36 @@ components:
           description: products of application
           items:
             $ref: "#/components/schemas/ApplicationProductDto"
+        applicationOperationalServices:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: operational services of application
+          items:
+            $ref: "#/components/schemas/ApplicationOperationalServiceDto"
+        applicationTrack:
+          $ref: "#/components/schemas/ApplicationTrackDto"
+        runway:
+          $ref: "#/components/schemas/RunwayDto"
+        operationalReportId:
+          type: string
+          format: uuid
+          nullable: true
+          description: identification of the operational report generated for this application, when available
+          example: 8f0a5e2c-1b3d-4f6a-9c8e-7d6b5a4f3e2d
+        processedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application was last processed
+          example: 2024-05-27T22:52:44.903Z
+        lastReprocessedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the application was last reprocessed
+          example: 2024-05-27T22:52:44.903Z
         serviceOrder:
           $ref: "#/components/schemas/ServiceOrderDto"
         averageSuccessScore:
@@ -2988,9 +4543,17 @@ components:
           minItems: 0
           nullable: true
           uniqueItems: true
-          description: flow rate data of application
+          description: map layers generated for this application
           items:
             $ref: "#/components/schemas/LayersDto"
+        images:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: images generated for this application
+          items:
+            $ref: "#/components/schemas/ApplicationImageDto"
         averageSpeed:
           format: double
           type: number
@@ -3014,6 +4577,29 @@ components:
           description: height data of application
           items:
             $ref: "#/components/schemas/HeightDataByGroupDto"
+        speedDataByGroup:
+          type: array
+          minItems: 0
+          nullable: true
+          uniqueItems: true
+          description: speed data of application
+          items:
+            $ref: "#/components/schemas/SpeedDataByGroupDto"
+        plannedAverageSpeed:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        flowRangeVariation:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
+        heightRangeVariation:
+          format: double
+          type: number
+          nullable: true
+          example: 98.45
         totalInternalAppliedOverlapArea:
           format: double
           type: number
@@ -3182,6 +4768,12 @@ components:
           $ref: "#/components/schemas/ProductClassTypeEnum"
         serviceType:
           $ref: "#/components/schemas/ProductServiceTypeEnum"
+        formulation:
+          $ref: "#/components/schemas/ProductFormulationEnum"
+        toxicityCategory:
+          $ref: "#/components/schemas/ProductToxicityCategoryEnum"
+        colorBand:
+          $ref: "#/components/schemas/ProductColorBandEnum"
         measurementUnit:
           $ref: "#/components/schemas/MeasurementUnitEnum"
         createdAt:
@@ -3279,6 +4871,8 @@ components:
         - area
         - count
         - boundaries
+        - hasChildren
+        - childrenAmount
         - createdAt
       properties:
         id:
@@ -3316,6 +4910,93 @@ components:
           description: object in wkt format that represents the georeference of the farm according to the active fields associated with it. Also "POLYGON EMPTY" when withBoundaries=false was passed to GET /farms, skipping this aggregation.
           example: "MULTIPOLYGON (((-63.7279364 -8.8349494,-63.7264692 -8.8379071,-63.7252954 -8.8373272,-63.7272909 -8.8346015,-63.7279364 -8.8349494)),((-63.7265866 -8.8333836,-63.7268213 -8.8324557,-63.7245324 -8.8322238,-63.7246498 -8.8331516,-63.7265866 -8.8333836)))"
           format: wkt
+        hasChildren:
+          type: boolean
+          nullable: false
+          description: whether this farm has other farms nested under it (as if it were a tree structure)
+          example: true
+        childrenAmount:
+          type: integer
+          nullable: false
+          description: number of farms nested directly under this farm
+          example: 2
+        parentFarmId:
+          type: string
+          format: uuid
+          nullable: true
+          description: identification of the parent farm, when this farm was associated with one on creation
+          example: a4f8d25b-27cd-473a-ae25-ed6e8ff8f321
+        parentFarm:
+          type: object
+          nullable: true
+          description: the parent farm's own record, present only on GET /farms/{farmId} (absent from GET /farms list responses). Note its `count`/`area`/`boundaries` are not aggregated from active fields the way the top-level farm's are, and it uses `childrenCount` instead of `childrenAmount` — it is not re-enriched the same way the top-level farm is, and does not itself carry a further nested `parentFarm`.
+          required:
+            - id
+            - name
+            - namespace
+            - area
+            - count
+            - boundaries
+            - childrenCount
+            - createdAt
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              example: 5854e582-e539-43ca-a153-52c66f4c98c5
+            name:
+              type: string
+              nullable: false
+              example: Root Farm
+            namespace:
+              type: string
+              nullable: false
+              example: Farms
+            area:
+              type: number
+              nullable: false
+              example: 0
+            count:
+              type: integer
+              nullable: false
+              example: 0
+            boundaries:
+              type: string
+              nullable: false
+              format: wkt
+              example: "POLYGON EMPTY"
+            childrenCount:
+              type: integer
+              nullable: false
+              example: 0
+            parentFarmId:
+              type: string
+              format: uuid
+              nullable: true
+              example: null
+            createdAt:
+              type: string
+              format: date-time
+              nullable: false
+              example: 2024-05-27T22:52:44.903Z
+            updatedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: 2024-05-27T22:55:44.903Z
+            deletedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: null
+        farmNameHierarchy:
+          type: array
+          nullable: true
+          description: names of the ancestor farms, from the root farm down to this farm's direct parent
+          items:
+            type: string
+          example: ["Root Farm", "Sub Farm"]
         createdAt:
           type: string
           format: date-time
@@ -3393,7 +5074,7 @@ components:
       required:
         - id
         - name
-        - farmId
+        - farm
         - boundaries
         - area
         - createdAt
@@ -3414,12 +5095,57 @@ components:
           nullable: false
           description: total field area in hectares.
           example: 33.43
-        farmId:
-          type: string
-          format: uuid
+        farm:
+          type: object
           nullable: false
-          description: unique identification of the farm to which the field is associated
-          example: 20f94ebe-361b-44e6-9729-57d744d04b27
+          description: |-
+            farm (and customer) this field was created under. `count`/`area`/`boundaries`/`childrenCount` are not real aggregated data here — this is an in-memory farm reference built from just its `id` (never re-fetched from the database), so these 4 properties are always its class defaults (`0`/`0`/`"POLYGON EMPTY"`/`0`), not the farm's actual values. Use `GET /farms/{farmId}` if you need the real ones.
+          required:
+            - id
+            - customer
+            - count
+            - area
+            - boundaries
+            - childrenCount
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              description: unique identification of the farm to which the field is associated
+              example: 20f94ebe-361b-44e6-9729-57d744d04b27
+            customer:
+              type: object
+              nullable: false
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  nullable: false
+                  example: 134457d7-58d3-4247-9f67-3fa82b3a0535
+            count:
+              type: integer
+              nullable: false
+              description: always `0` — not the farm's real field count, see note above
+              example: 0
+            area:
+              type: number
+              nullable: false
+              description: always `0` — not the farm's real area, see note above
+              example: 0
+            boundaries:
+              type: string
+              format: wkt
+              nullable: false
+              description: always `"POLYGON EMPTY"` — not the farm's real boundaries, see note above
+              example: "POLYGON EMPTY"
+            childrenCount:
+              type: integer
+              nullable: false
+              description: always `0` — not the farm's real children count, see note above
+              example: 0
         boundaries:
           type: string
           nullable: false
@@ -3453,8 +5179,15 @@ components:
           nullable: false
           description: unique product identification
           example: efae9cea-767f-4d28-a4e6-891ee7b0e998
-        amount:
-          $ref: "#/components/schemas/AmountDto"
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        cost:
+          type: number
+          format: double
+          nullable: false
+          default: 0
+          description: product cost, in `currency`
+          example: 332.43
         code:
           type: integer
           nullable: true
@@ -3472,6 +5205,14 @@ components:
           example: Manufacturer Example
         classType:
           $ref: "#/components/schemas/ProductClassTypeEnum"
+        serviceType:
+          $ref: "#/components/schemas/ProductServiceTypeEnum"
+        formulation:
+          $ref: "#/components/schemas/ProductFormulationEnum"
+        toxicityCategory:
+          $ref: "#/components/schemas/ProductToxicityCategoryEnum"
+        colorBand:
+          $ref: "#/components/schemas/ProductColorBandEnum"
         measurementUnit:
           $ref: "#/components/schemas/MeasurementUnitEnum"
         createdAt:
@@ -3501,8 +5242,15 @@ components:
           nullable: false
           description: unique product identification
           example: efae9cea-767f-4d28-a4e6-891ee7b0e998
-        amount:
-          $ref: "#/components/schemas/AmountDto"
+        currency:
+          $ref: "#/components/schemas/CurrencyEnum"
+        cost:
+          type: number
+          format: double
+          nullable: false
+          default: 0
+          description: product cost, in `currency`
+          example: 332.43
         code:
           type: integer
           nullable: true
@@ -3520,6 +5268,14 @@ components:
           example: Manufacturer Example
         classType:
           $ref: "#/components/schemas/ProductClassTypeEnum"
+        serviceType:
+          $ref: "#/components/schemas/ProductServiceTypeEnum"
+        formulation:
+          $ref: "#/components/schemas/ProductFormulationEnum"
+        toxicityCategory:
+          $ref: "#/components/schemas/ProductToxicityCategoryEnum"
+        colorBand:
+          $ref: "#/components/schemas/ProductColorBandEnum"
         measurementUnit:
           $ref: "#/components/schemas/MeasurementUnitEnum"
         createdAt:
@@ -3551,6 +5307,18 @@ components:
       properties:
         id:
           $ref: "#/components/schemas/SeasonId"
+        customer:
+          type: object
+          nullable: true
+          description: customer this season was created under. Absent when this call restored a previously soft-deleted season with matching data instead of creating a new one.
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              example: 134457d7-58d3-4247-9f67-3fa82b3a0535
         startedIn:
           type: string
           format: date-time
@@ -3577,6 +5345,12 @@ components:
           nullable: true
           description: timestamp in RFC 3339 format (UTC) in which the season was updated
           example: 2024-05-27T22:55:44.903Z
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: timestamp in RFC 3339 format (UTC) in which the season was deleted
+          example: 2024-05-27T22:59:44.903Z
     PilotId:
       type: string
       format: uuid
@@ -3615,12 +5389,16 @@ components:
       example: "fe1e9d3c-18fa-4e31-86c1-38c33be1856c"
     CreatePreFlightDto:
       type: object
+      required:
+        - slug
       properties:
         slug:
           type: string
-          nullable: true
-          description: service order identification
-          default: "OS-XXXXXXXXXX"
+          nullable: false
+          description: |-
+            service order identification. Required: this endpoint looks up an existing service order by this value, so omitting it either fails with a false-positive "already exists" error or a server error, depending on whether the customer already has other service orders.
+
+            to obtain a valid slug, read `serviceOrder.slug` from `GET /applications/{applicationId}` — there is currently no other way to discover one via this API.
           example: "OS-1234567899"
         status:
           $ref: "#/components/schemas/ServiceOrderStatusEnum"
