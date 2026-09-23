@@ -238,15 +238,22 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: |-
-                  A 2-position tuple, NOT a plain array of products: position 0 is always the array of matched products (paginated); position 1 is always the total count of matched products, ignoring pagination.
-
-                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
-                minItems: 2
-                maxItems: 2
-                items: {}
-                example: [[], 2]
+                type: object
+                description: paginated product search result
+                required:
+                  - products
+                  - total
+                properties:
+                  products:
+                    type: array
+                    description: matched products, paginated
+                    items:
+                      $ref: "#/components/schemas/ProductDto"
+                  total:
+                    type: integer
+                    nullable: false
+                    description: total count of matched products, ignoring pagination
+                    example: 2
         "401":
           description: unauthorized
           headers:
@@ -355,15 +362,22 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: |-
-                  A 2-position tuple, NOT a plain array of pilots: position 0 is always the array of matched pilots (paginated); position 1 is always the total count of matched pilots, ignoring pagination.
-
-                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
-                minItems: 2
-                maxItems: 2
-                items: {}
-                example: [[], 2]
+                type: object
+                description: paginated pilot search result
+                required:
+                  - pilots
+                  - total
+                properties:
+                  pilots:
+                    type: array
+                    description: matched pilots, paginated
+                    items:
+                      $ref: "#/components/schemas/PilotDto"
+                  total:
+                    type: integer
+                    nullable: false
+                    description: total count of matched pilots, ignoring pagination
+                    example: 2
         "401":
           description: unauthorized
           headers:
@@ -446,15 +460,22 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: |-
-                  A 2-position tuple, NOT a plain array of vehicles: position 0 is always the array of matched vehicles (paginated); position 1 is always the total count of matched vehicles, ignoring pagination.
-
-                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
-                minItems: 2
-                maxItems: 2
-                items: {}
-                example: [[], 3]
+                type: object
+                description: paginated vehicle search result
+                required:
+                  - vehicles
+                  - total
+                properties:
+                  vehicles:
+                    type: array
+                    description: matched vehicles, paginated
+                    items:
+                      $ref: "#/components/schemas/VehicleDto"
+                  total:
+                    type: integer
+                    nullable: false
+                    description: total count of matched vehicles, ignoring pagination
+                    example: 3
         "401":
           description: unauthorized
           headers:
@@ -600,15 +621,22 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: |-
-                  A 2-position tuple, NOT a plain array of seasons: position 0 is always the array of matched seasons (paginated); position 1 is always the total count of matched seasons, ignoring pagination.
-
-                  OpenAPI 3.0 cannot express a positional tuple type (no `prefixItems`), so `items` below is intentionally left unconstrained — treat it only as documentation of the two positions, not as a validatable per-position schema.
-                minItems: 2
-                maxItems: 2
-                items: {}
-                example: [[], 2]
+                type: object
+                description: paginated season search result
+                required:
+                  - seasons
+                  - total
+                properties:
+                  seasons:
+                    type: array
+                    description: matched seasons, paginated
+                    items:
+                      $ref: "#/components/schemas/SeasonDto"
+                  total:
+                    type: integer
+                    nullable: false
+                    description: total count of matched seasons, ignoring pagination
+                    example: 2
         "401":
           description: unauthorized
           headers:
@@ -5098,15 +5126,10 @@ components:
         farm:
           type: object
           nullable: false
-          description: |-
-            farm (and customer) this field was created under. `count`/`area`/`boundaries`/`childrenCount` are not real aggregated data here — this is an in-memory farm reference built from just its `id` (never re-fetched from the database), so these 4 properties are always its class defaults (`0`/`0`/`"POLYGON EMPTY"`/`0`), not the farm's actual values. Use `GET /farms/{farmId}` if you need the real ones.
+          description: farm this field was created under
           required:
             - id
-            - customer
-            - count
-            - area
-            - boundaries
-            - childrenCount
+            - name
           properties:
             id:
               type: string
@@ -5114,38 +5137,11 @@ components:
               nullable: false
               description: unique identification of the farm to which the field is associated
               example: 20f94ebe-361b-44e6-9729-57d744d04b27
-            customer:
-              type: object
-              nullable: false
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  nullable: false
-                  example: 134457d7-58d3-4247-9f67-3fa82b3a0535
-            count:
-              type: integer
-              nullable: false
-              description: always `0` — not the farm's real field count, see note above
-              example: 0
-            area:
-              type: number
-              nullable: false
-              description: always `0` — not the farm's real area, see note above
-              example: 0
-            boundaries:
+            name:
               type: string
-              format: wkt
               nullable: false
-              description: always `"POLYGON EMPTY"` — not the farm's real boundaries, see note above
-              example: "POLYGON EMPTY"
-            childrenCount:
-              type: integer
-              nullable: false
-              description: always `0` — not the farm's real children count, see note above
-              example: 0
+              description: farm name
+              example: "1"
         boundaries:
           type: string
           nullable: false
@@ -5168,6 +5164,7 @@ components:
       type: object
       required:
         - id
+        - customer
         - alias
         - classType
         - measurementUnit
@@ -5179,6 +5176,18 @@ components:
           nullable: false
           description: unique product identification
           example: efae9cea-767f-4d28-a4e6-891ee7b0e998
+        customer:
+          type: object
+          nullable: false
+          description: customer this product was created under
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              example: 134457d7-58d3-4247-9f67-3fa82b3a0535
         currency:
           $ref: "#/components/schemas/CurrencyEnum"
         cost:
@@ -5300,6 +5309,7 @@ components:
       type: object
       required:
         - id
+        - customer
         - startedIn
         - finishedIn
         - createdAt
@@ -5309,8 +5319,8 @@ components:
           $ref: "#/components/schemas/SeasonId"
         customer:
           type: object
-          nullable: true
-          description: customer this season was created under. Absent when this call restored a previously soft-deleted season with matching data instead of creating a new one.
+          nullable: false
+          description: customer this season was created under
           required:
             - id
           properties:
@@ -5389,16 +5399,14 @@ components:
       example: "fe1e9d3c-18fa-4e31-86c1-38c33be1856c"
     CreatePreFlightDto:
       type: object
-      required:
-        - slug
       properties:
         slug:
           type: string
           nullable: false
           description: |-
-            service order identification. Required: this endpoint looks up an existing service order by this value, so omitting it either fails with a false-positive "already exists" error or a server error, depending on whether the customer already has other service orders.
+            service order identification. Optional — if omitted (or blank), a default of the form `OS-{timestamp}` is generated and used instead. Either way, the resulting slug must be unique per customer; reusing an existing slug fails with an "already exists" error.
 
-            to obtain a valid slug, read `serviceOrder.slug` from `GET /applications/{applicationId}` — there is currently no other way to discover one via this API.
+            to obtain a valid pre-existing slug instead of letting one be generated, read `serviceOrder.slug` from `GET /applications/{applicationId}`.
           example: "OS-1234567899"
         status:
           $ref: "#/components/schemas/ServiceOrderStatusEnum"
@@ -5481,6 +5489,7 @@ components:
       type: object
       required:
         - alias
+        - productId
         - measurementUnit
       properties:
         alias:
@@ -5497,8 +5506,8 @@ components:
         productId:
           type: string
           format: uuid
-          nullable: true
-          description: unique identifier of the suggested product, this field must be filled in when the new product registration is associated with a suggested product.
+          nullable: false
+          description: unique identifier of the suggested product this new product registration is associated with. Every customer product must be linked to one from the catalog — there is no support for a standalone product not tied to a suggested product.
           example: "efae9cea-767f-4d28-a4e6-891ee7b0e998"
         code:
           type: integer
@@ -5585,9 +5594,8 @@ components:
       properties:
         slug:
           type: string
-          nullable: true
-          description: service order identification
-          default: "OS-XXXXXXXXXX"
+          nullable: false
+          description: service order identification. If `slug` was omitted in the request, this reflects the auto-generated value, in the form `OS-{timestamp}`.
           example: "OS-1234567899"
   securitySchemes:
     auth:

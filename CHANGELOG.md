@@ -108,6 +108,29 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   aninhados.
 - A resposta de `POST /seasons` agora documenta o campo `customer` aninhado,
   já retornado pela API e ausente da doc anterior.
+- `GET /seasons`, `GET /products`, `GET /pilots` e `GET /vehicles` estavam
+  documentados como retornando uma tupla `[itens, total]`; a API corrigiu o
+  formato de resposta desses 4 endpoints (envelope `{seasons, total}`,
+  `{products, total}`, `{pilots, total}`, `{vehicles, total}`), e a doc foi
+  atualizada de acordo.
+- `FieldCreatedDto.farm` (`POST /fields`) documentava `count`/`area`/
+  `boundaries`/`childrenCount` fabricados (bug já corrigido na API);
+  corrigido para o formato real, enxuto: só `{id, name}`.
+- `SeasonCreatedDto.customer` estava documentado como opcional (ausente ao
+  restaurar uma season soft-deleted); a API corrigiu esse bug, e o campo
+  agora sempre vem presente — doc atualizada de acordo.
+- `CreatePreFlightDto.slug` estava documentado como obrigatório, por causa
+  de um bug que tornava omiti-lo problemático; a API corrigiu esse bug
+  (gera um default `OS-{timestamp}` quando omitido), e o campo volta a ser
+  documentado como opcional.
+- `PreFlightCreatedDto.slug` estava documentado como podendo vir ausente —
+  a API corrigiu o bug que fazia a resposta de sucesso sempre vir vazia, e
+  o campo agora é documentado como sempre presente.
+- `ProductCreatedDto` (`POST /products`) não documentava o campo `customer`,
+  já retornado pela API; adicionado.
+- `CreateProductDto.productId` estava documentado como opcional; corrigido
+  para obrigatório, confirmado como regra de negócio (todo produto de
+  cliente precisa estar vinculado a um produto do catálogo).
 
 ## [0.0.8] - 2026-08-05
 
