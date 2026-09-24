@@ -40,15 +40,15 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   passam a documentar `serviceType`.
 - `AerialCompanyDto` (usado em `pilot` e `vehicle`) agora documenta `state`,
   `city` e `mapaRegistration`.
-- `AerialCompanyDto` (`GET /vehicles`) e `SeasonDto` (`GET /seasons`,
-  `GET /seasons/{seasonId}`) agora documentam o campo `customer` (novo
-  schema `CustomerDto`), já retornado pela API e ausente da doc anterior.
+- `AerialCompanyDto` (`GET /vehicles`), `SeasonDto` (`GET /seasons`,
+  `GET /seasons/{seasonId}`), `SeasonCreatedDto` (`POST /seasons`) e
+  `ProductCreatedDto` (`POST /products`) agora documentam o campo `customer`
+  (novo schema `CustomerDto`), já retornado pela API e ausente da doc
+  anterior.
 - `ApplicationFieldDto` agora documenta o campo aninhado `applicationTrack`,
   já retornado pela API.
 - `FarmDto` agora documenta o campo aninhado `parentFarm`, presente apenas
   em `GET /farms/{farmId}` (ausente da listagem `GET /farms`).
-- `FieldCreatedDto.farm` (resposta de `POST /fields`) agora documenta os
-  campos `count`, `area`, `boundaries` e `childrenCount`.
 - `SeasonCreatedDto` (resposta de `POST /seasons`) agora documenta
   `deletedAt`.
 
@@ -56,14 +56,11 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - `GET /applications` estava documentado como retornando um array de
   aplicações direto; corrigido para o formato real, um objeto
   `{applications, total}`.
-- `GET /seasons`, `GET /products` e `GET /vehicles` estavam documentados
-  como retornando um array direto; corrigidos para o formato real, uma
-  tupla `[itens, total]` — mesmo padrão já conhecido de `GET /pilots`.
-- A representação da tupla de `GET /pilots` usava `oneOf`, que não fixa a
-  posição de cada elemento da tupla (gera exemplo e codegen incorretos em
-  ferramentas que consomem o spec); corrigida a representação. A mesma
-  correção foi aplicada de saída nas tuplas novas de `/seasons`, `/products`
-  e `/vehicles`.
+- `GET /seasons`, `GET /products`, `GET /pilots` e `GET /vehicles` estavam
+  documentados incorretamente (array simples, ou tupla `[itens, total]` no
+  caso de `/pilots`); corrigidos para o formato real, um envelope por
+  endpoint (`{seasons, total}`, `{products, total}`, `{pilots, total}`,
+  `{vehicles, total}`).
 - `ProductDto`/`ProductCreatedDto` documentavam um objeto `amount` aninhado;
   corrigido para os campos reais, soltos: `currency` e `cost`.
 - `ServiceOrderDto`: 23 campos numéricos de totais estavam documentados como
@@ -80,14 +77,11 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   corrigido para sempre presente (`required`).
 - A descrição de `layers` (`ApplicationDto.layers`) estava copiada de
   `flowRateDataByGroup` ("flow rate data of application"); corrigida.
-- `CreatePreFlightDto.slug` estava documentado como opcional; corrigido
-  para obrigatório — o endpoint depende dele para localizar a Service
-  Order correspondente, e omiti-lo causa comportamento incorreto. A
-  descrição agora também aponta onde obter um slug válido
+- `CreatePreFlightDto.slug`: descrição atualizada para refletir o
+  comportamento real da API — o campo continua opcional, e quando omitido
+  (ou vazio) a API gera um default no formato `OS-{timestamp}`. A descrição
+  agora também aponta onde obter um slug válido pré-existente
   (`GET /applications/{applicationId}.serviceOrder.slug`).
-- `SeasonCreatedDto.customer` estava documentado como sempre presente;
-  corrigido para opcional, já que fica ausente quando a chamada restaura
-  uma season soft-deleted em vez de criar uma nova.
 - `FieldDto.boundaries` estava documentado como sempre presente; corrigido
   para opcional, já que `GET /fields` pode omiti-lo (`withBoundaries=false`).
   A descrição de `boundaries` em `FieldDto` e `FarmDto` agora deixa explícito
@@ -95,8 +89,6 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - `ApplicationFieldDto.boundaries` estava documentado como sempre presente;
   corrigido para opcional, já que `GET /applications` pode omiti-lo
   (`withBoundaries=false`).
-- `GET /pilots` estava documentado como retornando um array de pilotos
-  direto; corrigido para o formato real, uma tupla `[pilotos, total]`.
 - O `type` de cada item de `layers` (`ApplicationDto.layers`) estava
   documentado com um conjunto de valores e uma convenção de nomenclatura
   (`AppliedOverlap`) diferentes dos realmente usados pela API
@@ -104,30 +96,11 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
   os 27 valores reais. `layers` também ganhou os campos `length`,
   `createdAt` e `updatedAt`, que já eram retornados.
 - A resposta de `POST /fields` estava documentada com um `farmId` plano;
-  corrigida para o formato real, que retorna `farm.id` (e `farm.customer.id`)
-  aninhados.
-- A resposta de `POST /seasons` agora documenta o campo `customer` aninhado,
-  já retornado pela API e ausente da doc anterior.
-- `GET /seasons`, `GET /products`, `GET /pilots` e `GET /vehicles` estavam
-  documentados como retornando uma tupla `[itens, total]`; a API corrigiu o
-  formato de resposta desses 4 endpoints (envelope `{seasons, total}`,
-  `{products, total}`, `{pilots, total}`, `{vehicles, total}`), e a doc foi
-  atualizada de acordo.
-- `FieldCreatedDto.farm` (`POST /fields`) documentava `count`/`area`/
-  `boundaries`/`childrenCount` fabricados (bug já corrigido na API);
-  corrigido para o formato real, enxuto: só `{id, name}`.
-- `SeasonCreatedDto.customer` estava documentado como opcional (ausente ao
-  restaurar uma season soft-deleted); a API corrigiu esse bug, e o campo
-  agora sempre vem presente — doc atualizada de acordo.
-- `CreatePreFlightDto.slug` estava documentado como obrigatório, por causa
-  de um bug que tornava omiti-lo problemático; a API corrigiu esse bug
-  (gera um default `OS-{timestamp}` quando omitido), e o campo volta a ser
-  documentado como opcional.
+  corrigida para o formato real: `farm` aninhado, contendo apenas
+  `{id, name}`.
 - `PreFlightCreatedDto.slug` estava documentado como podendo vir ausente —
   a API corrigiu o bug que fazia a resposta de sucesso sempre vir vazia, e
   o campo agora é documentado como sempre presente.
-- `ProductCreatedDto` (`POST /products`) não documentava o campo `customer`,
-  já retornado pela API; adicionado.
 - `CreateProductDto.productId` estava documentado como opcional; corrigido
   para obrigatório, confirmado como regra de negócio (todo produto de
   cliente precisa estar vinculado a um produto do catálogo).
