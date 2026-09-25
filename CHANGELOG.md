@@ -9,6 +9,8 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-23
+
 ### Added
 - Documentada a compressão automática de resposta (gzip/Brotli): basta o
   cliente enviar `Accept-Encoding`, o que a maioria dos clientes HTTP já faz
