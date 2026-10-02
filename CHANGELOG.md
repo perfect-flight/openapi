@@ -13,6 +13,10 @@ versões abaixo correspondem às tags de release (semver) criadas no merge à
 - Documentada a compressão automática de resposta (gzip/Brotli): basta o
   cliente enviar `Accept-Encoding`, o que a maioria dos clientes HTTP já faz
   por padrão.
+- `GET /applications` agora aceita o parâmetro `filter`, com filtros no
+  formato `filter[<campo>][<operador>]=<valor>` (ex.:
+  `filter[status][in]=active,in_analysis`) sobre `status`,
+  `applicationType`, `processedAt`, `createdAt` e `season.crop`.
 - `GET /applications` agora documenta os parâmetros `order` (direção de
   ordenação por `createdAt`, default `asc`) e `withBoundaries` (default
   `true`; quando `false`, omite o campo `boundaries` de cada item de

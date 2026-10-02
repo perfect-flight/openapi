@@ -1600,6 +1600,38 @@ paths:
             format: date-time
             nullable: false
             example: 2024-06-30T22:52:44.903Z
+        - name: filter
+          in: query
+          description: |
+            Bracket-style filters in the form `filter[<field>][<operator>]=<value>`, e.g. `filter[status][eq]=complete`.
+            Combines (AND) with the other query parameters. Multiple fields and operators can be sent in the same request.
+
+            | field | type | allowed operators |
+            |---|---|---|
+            | `status` | `ApplicationStatusEnum` | `eq`, `ne`, `in` |
+            | `applicationType` | `ApplicationTypeEnum` | `eq`, `ne`, `in` |
+            | `processedAt` | date-time | `eq`, `gt`, `gte`, `lt`, `lte` |
+            | `createdAt` | date-time | `gte`, `lte` |
+            | `season.crop` | `CropEnum` | `eq`, `in` |
+
+            For `in`, send comma-separated values (e.g. `filter[status][in]=active,in_analysis`).
+            Unknown fields, unknown or disallowed operators and invalid values return `400`.
+
+            Example: `GET /applications?filter[status][in]=active,in_analysis&filter[createdAt][gte]=2024-06-01T00:00:00.000Z&filter[season.crop][eq]=cotton`
+          required: false
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+              additionalProperties:
+                type: string
+            example:
+              status:
+                in: active,in_analysis
+              createdAt:
+                gte: 2024-06-01T00:00:00.000Z
   /applications/{applicationId}:
     parameters:
       - name: x-pf-correlation-id
