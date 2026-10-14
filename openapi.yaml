@@ -1612,6 +1612,7 @@ paths:
             | `applicationType` | `ApplicationTypeEnum` | `eq`, `ne`, `in` |
             | `processedAt` | date-time | `eq`, `gt`, `gte`, `lt`, `lte` |
             | `createdAt` | date-time | `gte`, `lte` |
+            | `updatedAt` | date-time | `eq`, `gt`, `gte`, `lt`, `lte` |
             | `season.crop` | `CropEnum` | `eq`, `in` |
 
             For `in`, send comma-separated values (e.g. `filter[status][in]=active,in_analysis`).
